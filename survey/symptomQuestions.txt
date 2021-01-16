@@ -1,0 +1,58 @@
+Email Address: 
+
+Contact Phone:
+
+Select Affiliation
+	Student (in possession of a UC Davis Student ID Number)
+	Employee (collecting paycheck from UC Davis)
+	Other (do not have UC Davis Student ID Number or Student ID)
+
+
+Have you received a flu vaccination after August 1, 2020?
+OR Do you have an approved exemption from the flu vaccination mandate that allows you to come on campus?
+(May be subject to verification):
+	Yes
+	No
+
+
+Have you participated in COVID-19 testing within the past seven days?
+OR Do you have an appointment for COVID-19 testing today?   
+OR Have you been directed by a campus healthcare official to discontinue testing at this time?
+(May be subject to verification):
+	Yes (to one or more)
+	No
+	I am not accessing a UC Davis facility inside Yolo County
+
+
+Please check all symptoms present in the past 24 hours:
+All options, except the first (Fever), describe symptoms that are new and not from a known or chronic condition.
+
+Fever (> 100.4°F/38°C)
+Chills or Shaking
+Cough
+Shortness of Breath/Difficult Breathing
+Loss of Taste or Smell
+Sore Throat
+Runny Nose/Sinus Congestion
+Diarrhea
+Muscle Pains/Body Aches
+Headache
+Unusual Fatigue
+Eye Redness with or without Discharge
+Nausea or Vomiting
+None of the Above
+
+
+Have you tested positive for COVID-19 within the past 10 days?
+	Yes
+	No
+
+
+Have you been in Close Contact with a COVID-19 Positive person within the past 10 days
+Close Contact is defined as closer than 6 feet for greater than 15 minutes
+	Yes
+	No
+
+
+To the best of my ability, I certify answers to the preceding questions are true and correct.
+	Yes
