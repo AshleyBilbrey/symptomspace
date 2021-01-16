@@ -1,20 +1,19 @@
-<!DOCTYPE html>
+{% extends "index.html" %}
 
-<html lang="en">
+{% block title %}Survey{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>You've Been Approved!</title>
-    <script src="motQuotes.js"></script>
-</head>
+{% block styles %}
 
+{% endblock %}
 
-<body>
-<h1>symptom.space</h1>
+{% block scripts %}
+<script src="motQuotes.js"></script>
+{% endblock %}
+
+{% block content %}
 
 <form action="/action_page.php" id="vacQ">
-	<p>Have you received a flu vaccination after August 1, 2020?
+  <p>Have you received a flu vaccination after August 1, 2020?
 OR Do you have an approved exemption from the flu vaccination mandate that allows you to come on campus?
 (May be subject to verification):</p>
 
@@ -111,7 +110,4 @@ Close Contact is defined as closer than 6 feet for greater than 15 minutes</p>
   <input type="submit" value="Submit">
 
 </form>
-
-</body>
-
-</html>
+{% endblock %}

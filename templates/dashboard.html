@@ -1,7 +1,7 @@
-<!DOCTYPE html>
-<html>
+{% extends "index.html" %}
 
-<body>
-    Welcome, {{ name }}! You do not have a current survey. You can take one <a href="/survey">here</a>
-</body>
-</html>
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    Welcome, {{ name }}! You do not have a current survey. You can take one <a href="/survey">here</a> 
+{% endblock %}
