@@ -22,6 +22,7 @@
 					</div>
 			  		<div class="mdl-card__supporting-text">
 			  			<p>We've texted you a link! Either click the link <em>or</em> enter the code here.</p>
+
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 						    <input class="mdl-textfield__input" type="tel" id="phone-number" name="phone-number" pattern="[0-9]{10}" value="{{ phone_number }}">
 						    <label class="mdl-textfield__label" for="phone-number">Phone Number (US):</label>
@@ -30,6 +31,7 @@
 						    <input class="mdl-textfield__input" type="text" id="verify-code" name="verify-code">
 						    <label class="mdl-textfield__label" for="verify-code">Verification Code (Case Sensitive):</label>
 						</div>			
+						<p style="color: red; margin: 0">{{ message }}</p>
 					</div>
 					<div class="mdl-card__actions mdl-card--border">
 						<button type="submit" value="Verify Code" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
