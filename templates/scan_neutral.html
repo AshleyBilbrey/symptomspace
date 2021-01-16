@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Scan</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <link rel="stylesheet" type="text/css" href="../static/scan_neutral.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+
+      <h2>Symptom Survey Scanner</h2>
+
+      <br>
+
+      <div>
+        <video id="video" style="border: 1px solid gray"></video>
+      </div>
+
+      <div>
+        <button class="button" id="startButton">Start</button>
+        <button class="button" id="resetButton">Reset</button>
+      </div>
+
+      <br>
+
+      <div id="sourceSelectPanel" style="display:none">
+        <label for="sourceSelect">Change video source:</label>
+        <select id="sourceSelect" style="max-width:400px">
+        </select>
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+          <label for="recordType">Location </label>
+          <select id="recordType" size="1">
+              <option value="tercero_dining_hall">Tercero Dining Hall</option>
+              <option value="memorial_union">Memorial Union</option>
+              <option value="latitude">Latitude</option>
+          </select>
+      </div>
+
+      <label>Result:</label>
+      <pre><code id="result"></code></pre>
+
+    </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
+  <script type="text/javascript" src="../static/scan_neutral.js"></script>
+
+</body>
+
+</html>
