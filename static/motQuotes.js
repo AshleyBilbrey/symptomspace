@@ -17,4 +17,3 @@ $.ajax(settings).done(function (response) {
   const data = JSON.parse(response);
   console.log(data);
 });
-
