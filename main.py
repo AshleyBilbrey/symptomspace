@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session, redirect, url_for
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import re
@@ -17,7 +17,7 @@ def serve_index():
 def serve_login():
     if request.method == "GET":
         if 'session_id' in session:
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('serve_dashboard'))
         else:
             return render_template('login.html')
     elif request.method == "POST":
@@ -50,15 +50,15 @@ def serve_login():
                     "session_id": None
                 }
                 users.insert_one(newuser)
-            return "Check your texts for a login code!"
+            print("Send text for " + phonenumber + " with code " + new_login_code)
+            return render_template("login2.html", phone_number = phonenumber)
     else:
         return "Error"
 
 @app.route("/auth")
 def auth():
-
-    phonenumber = request.form["phone-number"]
-    verifycode = request.form["verify-code"]
+    phonenumber = request.args.get('phone-number')
+    verifycode = request.args.get('verify-code')
     search = re.search("[0-9]{10}", phonenumber)
     if(search == None):
         return "There was an error processing your request."
@@ -72,17 +72,22 @@ def auth():
                 return "Your login session has expired."
             elif verifycode != user["login_code"]:
                 return "That's not a valid login code!"
+            elif user["login_code"] == None:
+                return "That's not a valid login code!"
             else:
                 new_session_id = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(30))
                 user["session_id"] = new_session_id
+                user["login_code"] = None
                 session['session_id'] = new_session_id
                 user_id = user['_id']
                 users.replace_one({'_id': ObjectId(user_id)}, user)
-                return redirect(url_for('dashboard'))
+                return redirect(url_for('serve_dashboard'))
 
 @app.route("/logout")
+def logout():
     users = db.users
-    user = user.find_one({"session_id", session["session_id"]})
+    session_id = session['session_id']
+    user = users.find_one({"session_id": session_id})
     if user == None:
         session.pop("session_id", None)
         return "There was an error processing your request"
@@ -91,9 +96,14 @@ def auth():
         user_id = user['_id']
         users.replace_one({'_id': ObjectId(user_id)}, user)
         session.pop("session_id", None)
-        return redirect(url_for('index'))
+        return redirect(url_for('serve_index'))
 
-
+@app.route("/dashboard")
+def serve_dashboard():
+    if "session_id" in session:
+        return render_template("dashboard.html")
+    else:
+        return "You are not logged in!"
 
 #Delete this later!
 @app.route("/tempbase")
@@ -109,6 +119,7 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 if __name__ == '__main__':
-   app.run()
-   f = open("/secrets/secret_key.txt", "r")
-   app.secret_key = f.read(25)
+    f = open("./secrets/secret_key.txt", "r")
+    print("SECRET KEY SHH: " + f.read(25))
+    app.secret_key = f.read(25)
+    app.run()
