@@ -113,7 +113,8 @@ def serve_dashboard():
         elif user["completed_profile"] == False:
             return render_template("incomplete_profile.html")
         else:
-            return render_template("dashboard.html")
+            #If user has a complete profile, then check if they have a current survey
+            return render_template("dashboard.html", name = user["name"])
     else:
         return "You are not logged in!"
 
