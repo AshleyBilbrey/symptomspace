@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+    Update your profile:
+    <form action="/user/update" method="POST">
+        <label for="full-name">Full Name:</label>
+        <input type="text" id="full-name" name="full-name"><br>
+        <label for="email">Email (UCD Preferred):</label>
+        <input type="text" id="email" name="email"><br>
+        <label for="af-status">Affiliate Status:</label>
+        <select name="af-status" id="af-status">
+            <option value="Student">Student (In posession of a UCD Student ID number)</option>
+            <option value="Employee">Employee (Collecting a paycheck from UC Davis)</option>
+            <option value="Guest">Guest</option>
+        </select><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
