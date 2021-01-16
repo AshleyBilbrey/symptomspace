@@ -9,14 +9,23 @@ html, body
     max-width: 500px;
 }
 
-.big-header
+.mdl-layout__tab-bar-container 
 {
-    height: 200px;
+    height: 64px;
 }
 
-.full-bar
+.mdl-layout__tab-bar .mdl-layout__tab 
 {
-    padding-left: 0;
-    width: 100%;
-    box-sizing: border-box;
+    height: 64px;
+    line-height: 64px;
+}
+
+.mdl-layout__tab-bar-button
+{
+    display: none;
+}
+
+.mdl-layout__tab-panel 
+{
+    padding: 48px 8px;
 }
