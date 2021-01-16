@@ -16,7 +16,10 @@ def serve_index():
 @app.route("/login", methods = ["POST", "GET"])
 def serve_login():
     if request.method == "GET":
-        return render_template('login.html')
+        if 'session_id' in session:
+            return redirect(url_for('dashboard'))
+        else:
+            return render_template('login.html')
     elif request.method == "POST":
         #Check if valid phone number
         phonenumber = request.form["phone-number"]
@@ -76,6 +79,20 @@ def auth():
                 user_id = user['_id']
                 users.replace_one({'_id': ObjectId(user_id)}, user)
                 return redirect(url_for('dashboard'))
+
+@app.route("/logout")
+    users = db.users
+    user = user.find_one({"session_id", session["session_id"]})
+    if user == None:
+        session.pop("session_id", None)
+        return "There was an error processing your request"
+    else:
+        user["session_id"] = None
+        user_id = user['_id']
+        users.replace_one({'_id': ObjectId(user_id)}, user)
+        session.pop("session_id", None)
+        return redirect(url_for('index'))
+
 
 
 #Delete this later!

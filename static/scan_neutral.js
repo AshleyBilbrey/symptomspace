@@ -53,7 +53,7 @@ window.addEventListener('load', function () {
         };
 
         const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-        sourceSelectPanel.style.display = 'block'
+        sourceSelectPanel.style.display = 'inline-block'
       }
 
       document.getElementById('startButton').addEventListener('click', () => {
