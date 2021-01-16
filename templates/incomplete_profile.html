@@ -1,19 +1,63 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Info</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-orange.min.css">
+    <link rel="stylesheet" href="../static/login.css">
+</head>
 <body>
-    Welcome to symptom.space! Please complete your profile to continue.
-    <form action="/dashboard">
-        <label for="full-name">Full Name:</label>
-        <input type="text" id="full-name" name="full-name"><br>
-        <label for="email">Email (UCD Preferred):</label>
-        <input type="text" id="email" name="email"><br>
-        <label for="af-status">Affiliate Status:</label>
-        <select name="af-status" id="af-status">
-            <option value="Student">Student (In posession of a UCD Student ID number)</option>
-            <option value="Employee">Employee (Collecting a paycheck from UC Davis)</option>
-            <option value="Guest">Guest</option>
-        </select><br>
-        <input type="submit" value="Submit">
-    </form>
+
+    <div class="mdl-layout mdl-js-layout mdl-color--grey-100">
+        <main class="mdl-layout__content">
+            <div class="mdl-card mdl-shadow--6dp">
+                <form action="/dashboard">
+                    <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+                        <h2 class="mdl-card__title-text">symptom.space</h2>
+                    </div>
+                    <div class="mdl-card__supporting-text">
+                        <p>Welcome to symptom.space! <br> Please complete your profile to continue.</p>
+
+
+
+
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" id="full-name" name="full-name">
+                            <label class="mdl-textfield__label" for="full-name">Full Name:</label>
+                        </div> 
+
+
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" id="email" name="email">
+                            <label class="mdl-textfield__label" for="email">Email (UCD Preferred):</label>
+                        </div> 
+
+                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                              <select class="mdl-textfield__input" name="af-status" id="af-status" required>
+                                    <option value="">Affiliate Status: </option>
+                                  <option value="Student">UC Davis Student</option>
+                                    <option value="Employee">UC Davis Employee</option>
+                                    <option value="Guest">Guest</option>
+                              </select>
+                          </div>     
+                    </div>
+                    <div class="mdl-card__actions mdl-card--border">
+                        <button type="submit" value="Verify Code" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                          Verify Code
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </body>
 </html>
+
