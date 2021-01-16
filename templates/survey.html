@@ -11,17 +11,17 @@
 
 
 <body>
-<h1>SymptomSurvery++</h1>
+<h1>symptom.space</h1>
 
 <form action="/action_page.php" id="vacQ">
 	<p>Have you received a flu vaccination after August 1, 2020?
 OR Do you have an approved exemption from the flu vaccination mandate that allows you to come on campus?
 (May be subject to verification):</p>
 
-  <input type="checkbox" id="fluVacP" name="fluVacP" value="flueVac">
+  <input type="radio" id="fluVacP" name="fluVacP" value="flueVac">
   <label for="vehicle1"> Yes</label><br>
 
-  <input type="checkbox" id="flueVacN" name="fluVacN" value="flueVac">
+  <input type="radio" id="flueVacN" name="fluVacN" value="flueVac">
   <label for="vehicle2"> No</label><br>
 
 
@@ -31,13 +31,13 @@ OR Have you been directed by a campus healthcare official to discontinue testing
 (May be subject to verification):</p>
 
 
-  <input type="checkbox" id="testCovMet" name="testCovMet" value="testCov">
+  <input type="radio" id="testCovMet" name="testCovMet" value="testCov">
   <label for="vehicle1"> Yes</label><br>
 
-  <input type="checkbox" id="testCovFai" name="testCovMet" value="testCov">
+  <input type="radio" id="testCovFai" name="testCovMet" value="testCov">
   <label for="vehicle2"> No</label><br>
 
-  <input type="checkbox" id="noAcc" name="testCovNul" value="testCov">
+  <input type="radio" id="noAcc" name="testCovNul" value="testCov">
   <label for="vehicle2"> I am not accessing a UC Davis facility inside Yolo County</label><br>
 
   <p>Please check all symptoms present in the past 24 hours:
@@ -87,24 +87,24 @@ All options, except the first (Fever), describe symptoms that are new and not fr
 
 
   <p>Have you tested positive for COVID-19 within the past 10 days?</p>
-  <input type="checkbox" id="testTrue" name="covidTest" value="testCov">
+  <input type="radio" id="testTrue" name="covidTest" value="testCov">
   <label for="vehicle1"> Yes</label><br>
 
-  <input type="checkbox" id="testFalse" name="covidTest" value="testCov">
+  <input type="radio" id="testFalse" name="covidTest" value="testCov">
   <label for="vehicle2"> No</label><br>
 
 
  <p>Have you been in Close Contact with a COVID-19 Positive person within the past 10 days
 Close Contact is defined as closer than 6 feet for greater than 15 minutes</p>
-  <input type="checkbox" id="contactTrue" name="testContact" value="testCov">
+  <input type="radio" id="contactTrue" name="testContact" value="testCov">
   <label for="vehicle1"> Yes</label><br>
 
-  <input type="checkbox" id="contactFalse" name="testContact" value="testCov">
+  <input type="radio" id="contactFalse" name="testContact" value="testCov">
   <label for="vehicle2"> No</label><br>
 
 
 <p>To the best of my ability, I certify answers to the preceding questions are true and correct.</p>
-  <input type="checkbox" id="certi" name="finalQuest" value="testCov">
+  <input type="radio" id="certi" name="finalQuest" value="testCov">
   <label for="vehicle1"> Yes</label><br>
 
  

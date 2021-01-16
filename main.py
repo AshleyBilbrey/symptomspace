@@ -113,7 +113,8 @@ def serve_dashboard():
         elif user["completed_profile"] == False:
             return render_template("incomplete_profile.html")
         else:
-            return render_template("dashboard.html")
+            #If user has a complete profile, then check if they have a current survey
+            return render_template("dashboard.html", name = user["name"])
     else:
         return "You are not logged in!"
 
@@ -125,7 +126,7 @@ def user_update():
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-    if method == "POST":
+    if request.method == "POST":
         user["name"] = request.form["full-name"]
         user["email"] = request.form["email"]
         user["affiliate"] = request.form["af-status"]
@@ -133,11 +134,10 @@ def user_update():
         user_id = user['_id']
         users.replace_one({'_id': ObjectId(user_id)}, user)
         return redirect(url_for("serve_dashboard"))
-    elif method == "GET":
+    elif request.method == "GET":
         return render_template("user_update.html")
     else:
         return "There was an error processing your request."
-
 
 
 #Delete this later!
