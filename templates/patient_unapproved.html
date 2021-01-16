@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Individual Unapproved</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="../static/style.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</head>
+<body class="mdl-color--grey-100">
+    <div class="center-card mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h3>Status: <span class="mdl-color-text--red-600">Unapproved</span></h3>
+        </div>
+        <div class="mdl-card__media">
+            <img src="//placekitten.com/400" width="100%" alt="" id="qr">
+        </div>
+        <div class="mdl-card__supporting-text">
+            <ul class="mdl-list">
+                <li class="mdl-list__item mdl-list__item--two-line">
+                    <span class="mdl-list__item-primary-content">
+                        <span>Name</span>
+                        <span class="mdl-list__item-sub-title">{{ name }}</span>
+                    </span>
+                </li>
+                <li class="mdl-list__item mdl-list__item--two-line">
+                    <span class="mdl-list__item-primary-content">
+                        <span>Age</span>
+                        <span class="mdl-list__item-sub-title">{{ age }}</span>
+                    </span>
+                </li>
+                <li class="mdl-list__item mdl-list__item--two-line">
+                    <span class="mdl-list__item-primary-content">
+                        <span>Location</span>
+                        <span class="mdl-list__item-sub-title">{{ location }}</span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
