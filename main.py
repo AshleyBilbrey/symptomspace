@@ -85,25 +85,60 @@ def auth():
 
 @app.route("/logout")
 def logout():
-    users = db.users
-    session_id = session['session_id']
-    user = users.find_one({"session_id": session_id})
-    if user == None:
-        session.pop("session_id", None)
-        return "There was an error processing your request"
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        #If they logout without a valid session ID
+        if user == None:
+            session.pop("session_id", None)
+            return "There was an error processing your request."
+        else:
+            user["session_id"] = None
+            user_id = user['_id']
+            users.replace_one({'_id': ObjectId(user_id)}, user)
+            session.pop("session_id", None)
+            return redirect(url_for('serve_index'))
     else:
-        user["session_id"] = None
-        user_id = user['_id']
-        users.replace_one({'_id': ObjectId(user_id)}, user)
-        session.pop("session_id", None)
-        return redirect(url_for('serve_index'))
+        return "There was an error processing your request."
 
 @app.route("/dashboard")
 def serve_dashboard():
     if "session_id" in session:
-        return render_template("dashboard.html")
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["completed_profile"] == False:
+            return render_template("incomplete_profile.html")
+        else:
+            return render_template("dashboard.html")
     else:
         return "You are not logged in!"
+
+@app.route("/user/update", methods = ["POST", "GET"])
+def user_update():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+    if method == "POST":
+        user["name"] = request.form["full-name"]
+        user["email"] = request.form["email"]
+        user["affiliate"] = request.form["af-status"]
+        user["completed_profile"] = True
+        user_id = user['_id']
+        users.replace_one({'_id': ObjectId(user_id)}, user)
+        return redirect(url_for("serve_dashboard"))
+    elif method == "GET":
+        return render_template("user_update.html")
+    else:
+        return "There was an error processing your request."
+
+
 
 #Delete this later!
 @app.route("/tempbase")
