@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    We've texted you a link! Either click the link <em>or</em> enter the code here.
+    <form action="/auth" method="GET">
+        <label for="phone-number">Phone Number (US):</label>
+        <input type="tel" id="phone-number" name="phone-number" pattern="[0-9]{10}" value="{{ phone_number }}"><br>
+        <label for="verify-code">Verification Code (Case Sensitive):</label>
+        <input type="text" id="verify-code" name="verify-code"><br>
+        <input type="submit" value="Verify Code">
+    </form>
+</body>
+
+</html>
