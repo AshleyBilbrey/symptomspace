@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 from pymongo import MongoClient
+import re
 mongoclient = MongoClient()
 db = mongoclient.symptomspace_database
 app = Flask(__name__)
@@ -14,8 +15,11 @@ def serve_login():
         return render_template('login.html')
     elif request.method == "POST":
         phonenumber = request.form["phone-number"]
-
-        return "You tried to log in with phone number #" + phonenumber
+        search = re.search("[0-9]{10}", phonenumber)
+        if search = None:
+            return "That's not a valid phone number!"
+        else:
+            return "You tried to log in with phone number #" + phonenumber
     else:
         return "Error"
 
