@@ -1,5 +1,23 @@
+.container {
+	max-width: 40rem;
+	margin: auto;
+}
+
 #video {
 	width: 100%;
-	max-width: 40rem;
+}
 
+
+label, select {
+	font-size: 1.15rem;
+}
+
+pre {
+	padding: 1rem;
+	background-color: #fff;
+	width: 100%;
+}
+
+h4 {
+	margin-top: 0;
 }
