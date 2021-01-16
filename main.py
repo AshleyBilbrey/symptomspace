@@ -12,6 +12,12 @@ def serve_index():
 def serve_login():
     if request.method == "GET":
         return render_template('login.html')
+    elif request.method == "POST":
+        phonenumber = request.form["phone-number"]
+
+        return "You tried to log in with phone number #" + phonenumber
+    else:
+        return "Error"
 
 @app.errorhandler(404)
 def page_not_found(e):
