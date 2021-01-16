@@ -2,8 +2,10 @@
 <html>
 <body>
     Login
-    <form action="POST">
-        <input type="text" id="phone-number" name="phone-number">
+    <form action="/login" method="POST">
+        Phone number (US):<br>
+        <input type="tel" id="phone-number" name="phone-number" pattern="[0-9]{10}">
+        <input type="submit" value="Login">
     </form>
 </body>
 </html>
