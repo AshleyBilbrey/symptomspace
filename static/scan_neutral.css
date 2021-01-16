@@ -1,5 +1,22 @@
+.container {
+	max-width: 40rem;
+	margin: auto;
+}
+
 #video {
 	width: 100%;
-	max-width: 40rem;
+}
 
+.mdl-textfield {
+	margin-left: 1rem;
+}
+
+label, select {
+	font-size: 1.15rem;
+}
+
+pre {
+	padding: 1rem;
+	background-color: #fff;
+	width: 100%;
 }
