@@ -1,5 +1,22 @@
+html, body
+{
+    font-family: 'Roboto', 'Helvetica', sans-serif;
+}
+
 .center-card
 {
     margin: 0 auto;
     max-width: 500px;
+}
+
+.big-header
+{
+    height: 200px;
+}
+
+.full-bar
+{
+    padding-left: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
