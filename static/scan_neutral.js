@@ -1,42 +1,31 @@
-function decodeOnce(codeReader, selectedDeviceId) {
-  codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
-    console.log(result)
-    document.getElementById('result').textContent = result.text
-  }).catch((err) => {
-    console.error(err)
-    document.getElementById('result').textContent = err
-  })
-}
+var data = "";
 
 function decodeContinuously(codeReader, selectedDeviceId) {
   codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, 'video', (result, err) => {
     if (result) {
       // properly decoded qr code
-      console.log('Found QR code!', result)
-      document.getElementById('result').textContent = result.text
+      console.log('Found QR code!', result);
+
+      if (result.text != data) {
+        document.getElementById('result').textContent = result.text;
+        data = result.text;
+
+        //###################################################################
+        //DO STUFF WITH QR DATA HERE...SENDING TO SERVER AND GETTING RESPONSE
+        //###################################################################
+
+      }
     }
 
     if (err) {
-      // As long as this error belongs into one of the following categories
-      // the code reader is going to continue as excepted. Any other error
-      // will stop the decoding loop.
-      //
-      // Excepted Exceptions:
-      //
-      //  - NotFoundException
-      //  - ChecksumException
-      //  - FormatException
-
       if (err instanceof ZXing.NotFoundException) {
-        console.log('No QR code found.')
+        console.log('No QR code found.');
       }
-
-      if (err instanceof ZXing.ChecksumException) {
-        console.log('A code was found, but it\'s read value was not valid.')
+      else if (err instanceof ZXing.ChecksumException) {
+        console.log('A code was found, but it\'s read value was not valid.');
       }
-
-      if (err instanceof ZXing.FormatException) {
-        console.log('A code was found, but it was in a invalid format.')
+      else if (err instanceof ZXing.FormatException) {
+        console.log('A code was found, but it was in a invalid format.');
       }
     }
   })
@@ -69,13 +58,7 @@ window.addEventListener('load', function () {
 
       document.getElementById('startButton').addEventListener('click', () => {
 
-        const decodingStyle = document.getElementById('decoding-style').value;
-
-        if (decodingStyle == "once") {
-          decodeOnce(codeReader, selectedDeviceId);
-        } else {
-          decodeContinuously(codeReader, selectedDeviceId);
-        }
+        decodeContinuously(codeReader, selectedDeviceId);
 
         console.log(`Started decode from camera with id ${selectedDeviceId}`)
       })
