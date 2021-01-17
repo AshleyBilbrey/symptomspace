@@ -39,6 +39,13 @@
   <form action="/verify" method="GET">
       <label for="location">Location ID:</label>
       <input type="text" id="loc_id" name="loc_id" value="{{ loc_id }}"><br>
+
+      <select id="recordType" class="mdl-textfield__input" size="1">
+        {% for x in range(r) %}
+          <option value="{{ loc_ids[x] }}">{{ loc_names[x] }}</option>
+        {% endfor %}
+      </select>
+
       <label for="survey_id">Survey ID:</label>
       <input type="text" id="survey_id" name="survey_id"><br>
       <input type="submit" value="Submit">
@@ -55,9 +62,9 @@
   <label for="recordType" >Location: </label>
   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
       <select id="recordType" class="mdl-textfield__input" size="1">
-          <option value="tercero_dining_hall">Tercero Dining Hall</option>
-          <option value="memorial_union">Memorial Union</option>
-          <option value="latitude">Latitude</option>
+        {% for x in range(r) %}
+          <option value="{{ loc_ids[x] }}">{{ loc_names[x] }}</option>
+        {% endfor %}
       </select>
   </div>
 </div>
