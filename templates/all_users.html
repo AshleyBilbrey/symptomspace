@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <ul>
-        {% for x in range(r) %}
-            <a href="/user/{{ numbers[x] }}"><li>{{ names[x] }}</li></a>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "index.html" %}
+
+{% block title %}Users{% endblock %}
+
+{% block logout_display %}block{% endblock %}
+
+{% block content %}
+<h5>All Users:</h5>
+
+<ul class="demo-list-item mdl-list">
+	{% for x in range(r) %}
+  		<li class="mdl-list__item">
+	    <span class="mdl-list__item-primary-content">
+	      <a href="/user/{{ numbers[x] }}"><li>{{ names[x] }}</li></a>
+	    </span>
+	  </li>       
+	{% endfor %}
+</ul>   
+{% endblock %}
