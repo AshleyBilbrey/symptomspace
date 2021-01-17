@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}symptom.space{% endblock %}</title>
+    <title>{% block title %}Home{% endblock %} - symptom.space</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-orange.min.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
-    {% block styles %}{% endblock %}    
+    {% block styles %}{% endblock %}
 </head>
 <style>
     .centered-container
@@ -27,20 +27,30 @@
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <a href="/" class="mdl-layout__tab is-active">Survey</a>
-          <a href="/logout" style="display: {% block logout_display %}none{% endblock %}" class="mdl-layout__tab">Logout</a>
+          <a href="/" class="mdl-layout__tab {% if active == 'home' %} is-active{% endif %}">Home</a>
+          <a href="/dashboard" class="mdl-layout__tab {% if active == 'dashboard' %} is-active{% endif %}">Dashboard</a>
+          {% if active == 'survey'%}<a href="/dashboard" class="mdl-layout__tab is-active">Dashboard</a>{% endif %}
+          <a href="/user" class="mdl-layout__tab{% if active == 'profile' %} is-active{% endif %}">Profile</a>
+          {% if is_scanner %}<a href="/scan" class="mdl-layout__tab{% if active == 'scan' %} is-active{% endif %}">Scan</a>{% endif %}
+          {% if is_admin %}<a href="/user/all" class="mdl-layout__tab{% if active == 'users' %} is-active{% endif %}">Users</a>{% endif %}
+          {% if is_admin %}<a href="/location" class="mdl-layout__tab{% if active == 'locations' %} is-active{% endif %}">Locations</a>{% endif %}
+          {% if is_admin %}<a href="/map" class="mdl-layout__tab{% if active == 'map' %} is-active{% endif %}">Map</a>{% endif %}
+          {% if logged_in %}<a href="/logout" class="mdl-layout__tab">Logout</a>
+          {% else %}<a href="/login" class="mdl-layout__tab">Login</a>{% endif %}
         </div>
       </header>
       <main class="mdl-layout__content">
         <div class="mdl-layout__tab-panel is-active" id="overview">
-            <div class="centered-container"> 
+            <div class="centered-container">
               {% block content %}
                 <p>Welcome to symptom.space! This is a demo project for HackDavis 2021! Do your symptom survey here.</p>
-                <a href="/login" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Login</a>  
+                {% if logged_in %}<a href="/dashboard" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go to Dashboard</a>
+                {% else %}<a href="/login" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Login</a>{% endif %}
+                {% if is_scanner %}<a href="/scan" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go to Scanner</a>{% endif %}
               {% endblock %}
             </div>
         </div>
-        
+
         <footer class="mdl-mega-footer">
           <div class="mdl-mega-footer--middle-section">
             <div class="mdl-mega-footer--drop-down-section">
