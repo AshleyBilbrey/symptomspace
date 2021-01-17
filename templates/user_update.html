@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Info</title>
+    <title>Update User - symptom.space</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -23,25 +23,26 @@
                         <p>Update your profile</p>
 
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="full-name" name="full-name">
+                            <input class="mdl-textfield__input" type="text" id="full-name" name="full-name" value="{{ name }}">
                             <label class="mdl-textfield__label" for="full-name">Full Name:</label>
-                        </div> 
+                        </div>
 
 
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="email" name="email">
+                            <input class="mdl-textfield__input" type="text" id="email" name="email" value="{{ email }}">
                             <label class="mdl-textfield__label" for="email">Email (UCD Preferred):</label>
-                        </div> 
-                      
+                        </div>
+
                           <label for="af-status"></label>
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                               <select class="mdl-textfield__input" name="af-status" id="af-status" required>
                                     <option value="">Affiliate Status: </option>
-                                  <option value="Student">UC Davis Student</option>
-                                    <option value="Employee">UC Davis Employee</option>
-                                    <option value="Guest">Guest</option>
+
+                                    <option value="Student" {% if affiliate == 'Student' %}selected{% endif %}>UC Davis Student</option>
+                                    <option value="Employee" {% if affiliate == 'Employee' %}selected{% endif %}>UC Davis Employee</option>
+                                    <option value="Guest" {% if affiliate == 'Guest' %}selected{% endif %}>Guest</option>
                               </select>
-                          </div>     
+                          </div>
                     </div>
                     <div class="mdl-card__actions mdl-card--border">
                         <button type="submit" value="Submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">

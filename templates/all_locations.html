@@ -1,19 +1,22 @@
 {% extends "index.html" %}
 
-{% block title %}Users{% endblock %}
+{% block title %}Locations{% endblock %}
 
 {% block logout_display %}block{% endblock %}
 
 {% block content %}
-<h5>All Users:</h5>
+<h5>All Locations:</h5>
 
 <ul class="demo-list-item mdl-list">
 	{% for x in range(r) %}
   		<li class="mdl-list__item">
 	    <span class="mdl-list__item-primary-content">
-	      <a href="/user/{{ numbers[x] }}">{{ names[x] }}</a>
+	      <a href="/location/{{ loc_ids[x] }}">{{ loc_names[x] }}</a>
 	    </span>
 	  </li>
 	{% endfor %}
 </ul>
+
+<a href="/location/add" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Add New Location</a>
+
 {% endblock %}

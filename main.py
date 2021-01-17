@@ -1,7 +1,9 @@
 from flask import Flask, request, render_template, session, redirect, url_for, send_file
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from twilio.rest import Client
 import re
+import os
 import time
 from time import gmtime, strftime
 import random
@@ -12,9 +14,27 @@ mongoclient = MongoClient()
 db = mongoclient.symptomspace_database
 app = Flask(__name__)
 
+twilio_client = Client(open("./secrets/twilio_sid.txt", "r").read(34), open("./secrets/twilio_secret.txt", "r").read(32))
+
 @app.route("/")
 def serve_index():
-    return render_template('index.html')
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user != None:
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+        else:
+            user_is_scanner = False
+            user_is_admin = False
+            logged_in = False
+    else:
+        user_is_scanner = False
+        user_is_admin = False
+        logged_in = False
+    return render_template('index.html', active = "home", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
 
 @app.route("/login", methods = ["POST", "GET"])
 def serve_login():
@@ -59,10 +79,22 @@ def serve_login():
                     "current_survey_id": None,
                     "session_id": None,
                     "scanner_perm": False,
-                    "admin_perm": False
+                    "admin_perm": False,
+                    "exposures": []
                 }
                 users.insert_one(newuser)
             print("Send text for " + phonenumber + " with code " + new_login_code)
+            enable_twilio = False
+            if(enable_twilio):
+                try:
+                    message = twilio_client.messages.create(
+                        body='Hello from symptom.space! Please use code ' + new_login_code + ' to log in! Or use link http://localhost:5000/auth?phone-number=' + phonenumber + '&verify-code=' + new_login_code + " Please do not share this code with anyone.",
+                        from_='+16504494733',
+                        to='+1' + phonenumber
+                    )
+                except:
+                    return "We're sorry, there was an issue sending a code to that phone number. Please try again."
+                print(message.sid)
             return render_template("login2.html", phone_number = phonenumber)
     else:
         return "Error"
@@ -73,7 +105,7 @@ def auth():
     verifycode = request.args.get('verify-code')
     search = re.search("[0-9]{10}", phonenumber)
     if(search == None):
-        return "There was an error processing your request."
+        return "There was an error processing your request. You may have been logged in from another location."
     else:
         users = db.users
         user = users.find_one({"phone_number": phonenumber})
@@ -104,7 +136,7 @@ def logout():
         #If they logout without a valid session ID
         if user == None:
             session.pop("session_id", None)
-            return "There was an error processing your request."
+            return "There was an error processing your request. You may have been logged in from another location."
         else:
             user["session_id"] = None
             user_id = user['_id']
@@ -112,7 +144,7 @@ def logout():
             session.pop("session_id", None)
             return redirect(url_for('serve_index'))
     else:
-        return "There was an error processing your request."
+        return "There was an error processing your request. You may have been logged in from another location."
 
 @app.route("/dashboard")
 def serve_dashboard():
@@ -120,6 +152,7 @@ def serve_dashboard():
         users = db.users
         session_id = session['session_id']
         user = users.find_one({"session_id": session_id})
+
         if user == None:
             return redirect(url_for("logout"))
         elif user["completed_profile"] == False:
@@ -132,17 +165,23 @@ def serve_dashboard():
             most_recent_time = 0
             user_current_survey_id = user["current_survey_id"]
             if user["current_survey_id"] == None:
-                return render_template("dashboard.html", name = user["name"])
+                user_is_scanner = user["scanner_perm"]
+                user_is_admin = user["admin_perm"]
+                logged_in = True
+                return render_template("dashboard.html", name = user["name"], active = "dashboard", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
             else:
                 user_current_survey = surveys.find_one({"_id": user_current_survey_id})
                 if user_current_survey["day"] != cali_date:
-                    return render_template("dashboard.html", name = user["name"])
+                    user_is_scanner = user["scanner_perm"]
+                    user_is_admin = user["admin_perm"]
+                    logged_in = True
+                    return render_template("dashboard.html", name = user["name"], active = "dashboard", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
                 elif user_current_survey["approved"] == True:
                     return render_template("user_approved_survey.html", name = user["name"], survey_id = user_current_survey_id, date = cali_date)
                 elif user_current_survey["approved"] == False:
                     return render_template("user_unapproved_survey.html", name = user["name"], survey_id = user_current_survey_id, date = cali_date)
                 else:
-                    return "There was an error processing your request."
+                    return "There was an error processing your request. You may have been logged in from another location."
     else:
         return redirect(url_for("serve_login"))
 
@@ -154,7 +193,29 @@ def user_info():
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"])
+        user_is_scanner = user["scanner_perm"]
+        user_is_admin = user["admin_perm"]
+        logged_in = True
+        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"], exposures = user["exposures"], scanner = user["scanner_perm"], admin = user["admin_perm"], active = "profile", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/user/<phone_number>")
+def other_user(phone_number):
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            user2 = users.find_one({"phone_number": phone_number})
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("user_info.html", phonenumber = user2["phone_number"], name = user2["name"], email = user2["email"], affiliate = user2["affiliate"], exposures = user2["exposures"], status = 1, scanner = user2["scanner_perm"], admin = user2["admin_perm"], active = "users", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -174,7 +235,10 @@ def user_all():
             for u in users.find():
                 names.append(u["name"])
                 numbers.append(u["phone_number"])
-            return render_template("all_users.html", names = names, numbers = numbers, r = users.find().count())
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("all_users.html", names = names, numbers = numbers, r = users.find().count(), active = "users", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -186,18 +250,59 @@ def user_update():
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-    if request.method == "POST":
-        user["name"] = request.form["full-name"]
-        user["email"] = request.form["email"]
-        user["affiliate"] = request.form["af-status"]
-        user["completed_profile"] = True
-        user_id = user['_id']
-        users.replace_one({'_id': ObjectId(user_id)}, user)
-        return redirect(url_for("serve_dashboard"))
-    elif request.method == "GET":
-        return render_template("user_update.html")
+        if request.method == "POST":
+            user["name"] = request.form["full-name"]
+            user["email"] = request.form["email"]
+            user["affiliate"] = request.form["af-status"]
+            user["completed_profile"] = True
+            user_id = user['_id']
+            users.replace_one({'_id': ObjectId(user_id)}, user)
+            return redirect(url_for("user_info"))
+        elif request.method == "GET":
+            return render_template("user_update.html", email = user["email"], name = user["name"], affiliate = user["affiliate"])
+        else:
+            return "There was an error processing your request. You may have been logged in from another location."
     else:
-        return "There was an error processing your request."
+        return redirect(url_for("serve_login"))
+
+@app.route("/user/update/<phone_number>", methods = ["GET", "POST"])
+def edit_other_user(phone_number):
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            user2 = users.find_one({"phone_number": phone_number})
+            if request.method == "GET":
+                return render_template("user_update_other.html", phonenumber = phone_number, email = user2["email"], name = user2["name"], affiliate = user2["affiliate"], scanner = user2["scanner_perm"], admin = user2["admin_perm"])
+            elif request.method == "POST":
+                user2["name"] = request.form["full-name"]
+                user2["email"] = request.form["email"]
+                user2["affiliate"] = request.form["af-status"]
+
+                if request.form.get("is-scanner") == "yes":
+                    user2["scanner_perm"] = True
+                else:
+                    user2["scanner_perm"] = False
+
+                if request.form.get("is-admin") == "yes":
+                    user2["admin_perm"] = True
+                else:
+                    user2["admin_perm"] = False
+
+                print(user2)
+
+                db.users.replace_one({"phone_number": phone_number}, user2)
+
+                return redirect("/user/" + phone_number)
+            else:
+                return "There was an error processing your request. You may have been logged in from another location."
+    else:
+        return redirect(url_for("serve_login"))
 
 @app.route("/qr/<code>")
 def make_qr(code):
@@ -206,11 +311,6 @@ def make_qr(code):
     img_IO.seek(0)
     return send_file(img_IO, mimetype='image/png')
 
-
-#Delete this later!
-@app.route("/tempbase")
-def temp_base():
-    return render_template("scan_neutral.html")
 
 @app.route("/survey", methods = ["GET", "POST"])
 def serve_survey_page():
@@ -221,28 +321,28 @@ def serve_survey_page():
         if user == None:
             return redirect(url_for("logout"))
     if request.method == "GET":
-        return render_template("survey.html")
+        user_is_scanner = user["scanner_perm"]
+        user_is_admin = user["admin_perm"]
+        logged_in = True
+        return render_template("survey.html", active = "survey", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     elif request.method == "POST":
         print(request.form)
         approved = True
-        if request.form["flu"] != "yes":
-            print("No flu test")
-            approved = False
-        if request.form["covid-test"] == "no":
-            print("No covid test")
-            approved = False
-        if request.form["symptoms"] != "NONE":
-            print("Symptoms nono")
-            approved = False
-        if request.form["positive"] != "no":
-            print("Positive test")
-            approved = False
-        if request.form["close-contact"] != "no":
-            print("In close contact")
-            approved = False
-        if request.form["certify"] == None:
-            print("Not true")
-            approved = False
+        try:
+            if request.form["flu"] != "yes":
+                approved = False
+            if request.form["covid-test"] == "no":
+                approved = False
+            if request.form["symptoms"] != "NONE":
+                approved = False
+            if request.form["positive"] != "no":
+                approved = False
+            if request.form["close-contact"] != "no":
+                approved = False
+            if request.form["certify"] == None:
+                approved = False
+        except:
+            return render_template("survey.html", status = 1)
 
         cali_time = time.time() - 28800
         new_survey = {
@@ -258,7 +358,262 @@ def serve_survey_page():
         return redirect(url_for("serve_dashboard"))
 
     else:
-        return "There was an error processing your request."
+        return "There was an error processing your request. You may have been logged in from another location."
+
+@app.route("/location/")
+def all_locations():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            loc_names = []
+            loc_ids = []
+            for loc in locations.find():
+                loc_names.append(loc["name"])
+                loc_ids.append(loc["_id"])
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("all_locations.html", loc_names = loc_names, loc_ids = loc_ids, r = locations.find().count(), active = "locations", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/location/add", methods = ["GET", "POST"])
+def add_location():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            if request.method == "GET":
+                return render_template("add_location.html")
+            elif request.method == "POST":
+                locations = db.locations
+                new_loc = {
+                    "name": request.form["loc-name"],
+                    "address": request.form["loc-address"]
+                }
+                locations.insert_one(new_loc)
+                return redirect(url_for("all_locations"))
+            else:
+                return "There was an error processing your request. You may have been logged in from another location."
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/location/<loc_id>")
+def location_info(loc_id):
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            location = locations.find_one({"_id": ObjectId(loc_id)})
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("location_info.html", id = loc_id, name = location["name"], address = location["address"], active = "locations", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/location/update/<loc_id>", methods = ["GET", "POST"])
+def update_location(loc_id):
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            location = locations.find_one({"_id": ObjectId(loc_id)})
+            if request.method == "GET":
+                return render_template("location_update.html", id = loc_id, name = location["name"], address = location["address"])
+            elif request.method == "POST":
+                location["name"] = request.form["loc-name"]
+                location["address"] = request.form["loc-address"]
+                locations.replace_one({"_id": ObjectId(loc_id)}, location)
+                return redirect("/location/" + loc_id)
+            else:
+                return "There was an error processing your request. You may have been logged in from another location."
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/scan")
+def start_scan():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["scanner_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            loc_names = []
+            loc_ids = []
+            for loc in locations.find():
+                loc_names.append(loc["name"])
+                loc_ids.append(loc["_id"])
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("start_scanning.html", loc_names = loc_names, loc_ids = loc_ids, r = locations.find().count(), active = "scan", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/scan/<loc_id>")
+def scan(loc_id):
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["scanner_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            location = locations.find_one({"_id": ObjectId(loc_id)})
+            loc_name = location["name"]
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("scan_neutral.html", loc_name = loc_name, loc_id = loc_id, time = time.time(), active = "scan", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/verify")
+def verify():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["scanner_perm"] != True:
+            return "Unauthorized"
+        else:
+            check = True
+            cali_time = time.time() - 28800
+            survey_id = request.args.get("survey_id")
+            loc_id = request.args.get("loc_id")
+            surveys = db.surveys
+            survey = surveys.find_one({"_id": ObjectId(survey_id)})
+            survey_user_id = survey["user_id"]
+            survey_user = users.find_one({"_id": survey_user_id})
+            if survey["_id"] != survey_user["current_survey_id"]:
+                check = False
+            elif survey["approved"] == False:
+                check = False
+            elif survey["day"] != strftime("%Y-%m-%d" , gmtime(cali_time)):
+                check = False
+
+            checkins = db.checkins
+            newcheckin = {
+                "loc_id": ObjectId(loc_id),
+                "user_id": survey_user_id,
+                "time": cali_time,
+                "day": strftime("%Y-%m-%d" , gmtime(cali_time)),
+                "result": check,
+                "retroactive_check": check
+            }
+            checkins.insert_one(newcheckin)
+            response = {
+                "name": survey_user["name"],
+                "check": check
+            }
+            return response
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/positive")
+def positive():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        else:
+            return render_template("positive.html", name = user["name"])
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/positive/confirm")
+def confirm_positive():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        else:
+            cali_time = time.time() - 28800
+            fortnite = cali_time - 1209600
+            exposurelists = db.exposurelists
+            people_exposed = []
+            exposurelist_id = exposurelists.insert_one(new_exposurelist).inserted_id
+            checkins = db.checkins
+            for user_check in checkins.find({"user_id": user["_id"], "time": {"$gt": fortnite}}):
+                user_check["retroactive_check"] = False
+                replace_one({"_id": user_check["_id"]})
+                mt = user_check["time"] - 600
+                pt = user_check["time"] + 600
+                for other_check in checkins.find({"loc_id": user_chec["loc_id"], "time": {"$gt": mt, "$lt": pt} }):
+                    if(other_check["user_id"] != user["_id"]):
+                        update_exposure = users.find_one({"_id", other_check["user_id"]})
+                        update_exposure["exposures"].append(strftime("%Y-%m-%d" , gmtime(other_check["time"])))
+                        users.replace_one({"_id", other_check["user_id"]}, update_exposure)
+                    add_user = True
+                    for u in people_exposed:
+                        if u == other_check["user_id"]:
+                            add_user = False
+                    if (add_user) and (other_check["user_id"] != user["_id"]):
+                        people_exposed.append(other_check["user_id"])
+
+            enable_twilio = False
+            for peeps in people_exposed:
+                belonging_peep = users.find_one({"_id", peep})
+                recent_exposure = belonging_peep["exposures"][-1]
+                print("Send message to " + belonging_peep["phone_number"] + " for exposure on date " + recent_exposure)
+                if(enable_twilio):
+                    try:
+                        message = twilio_client.messages.create(
+                            body='Hello from symptom.space! This is an alert that you may have been in proximity of someone with COVID-19 as early as ' + recent_exposure + '. Please head to our website for a more detailed list of dates.',
+                            from_='+16504494733',
+                            to='+1' + belonging_peep["phone_number"]
+                        )
+                    except:
+                        print("There was a problem sending a text")
+
+            new_exposurelist = {
+                "exposure_host": user["_id"],
+                "reported_time": cali_time,
+                "reported_day": strftime("%Y-%m-%d" , gmtime(cali_time)),
+                "people_exposed": people_exposed
+            }
+            exposurelists.insert_one(new_exposurelist)
+            return render_template("positive_confirm.html")
+    else:
+        return redirect(url_for("serve_login"))
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -266,6 +621,5 @@ def page_not_found(e):
 
 if __name__ == '__main__':
     f = open("./secrets/secret_key.txt", "r")
-    print("SECRET KEY SHH: " + f.read(25))
     app.secret_key = f.read(25)
     app.run()

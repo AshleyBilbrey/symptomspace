@@ -1,11 +1,15 @@
 {% extends "index.html" %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block logout_display %}block{% endblock %}
 
 {% block content %}
+    {% if status == 1 %}
+    <h5>User Info for {{ phonenumber }}</h5>
+    {% else %}
     <h5>User Info</h5>
+    {% endif %}
     <ul class="demo-list-icon mdl-list">
       <li class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
@@ -31,6 +35,31 @@
         {{ affiliate }}
       </span>
       </li>
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-icon">coronavirus</i>
+        {% for x in exposures %}
+            <em>{{ x }} </em>
+        {% endfor %}
+      </span>
+      </li>
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-icon">qr_code</i>
+        {{ scanner }}
+      </span>
+      </li>
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-icon">health_and_safety</i>
+        {{ admin }}
+      </span>
+      </li>
     </ul>
-    <a href="/user/update" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Update Info</a> 
+    {% if status == 1 %}
+    <a href="/user/update/{{ phonenumber }}" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Update Info for {{ phonenumber }}</a>
+    {% else %}
+    <a href="/user/update" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Update Info</a>
+    <a href="/positive" style="background-color: red;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Report Positive COVID-19 Test</a>
+    {% endif %}
 {% endblock %}
