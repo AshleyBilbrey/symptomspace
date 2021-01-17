@@ -8,7 +8,7 @@
 
 {% block content %}
 
-I'm the map I'm the map I'm the map I'm the map! Tada!
+Problem heatmap:<br>
 
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script defer
@@ -33,7 +33,7 @@ I'm the map I'm the map I'm the map I'm the map! Tada!
 </style>
 <script>
     let map, heatmap
-    
+
       function initMap() {
 
           var heatMapData = [
@@ -52,6 +52,7 @@ I'm the map I'm the map I'm the map I'm the map! Tada!
                 data: heatMapData
             });
             heatmap.setMap(map);
+            heatmap.set("radius", 50)
       }
 
 
@@ -68,7 +69,6 @@ I'm the map I'm the map I'm the map I'm the map! Tada!
 
     </script>
 
-    I'm the map I'm the map I'm the map I'm the map, yay!
     <div id="map"></div>
 
 {% endblock %}
