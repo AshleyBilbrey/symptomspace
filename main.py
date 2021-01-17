@@ -629,6 +629,25 @@ def confirm_positive():
     else:
         return redirect(url_for("serve_login"))
 
+@app.route("/map")
+def map():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("map.html", active = "map", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+    else:
+        return redirect(url_for("serve_login"))
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
