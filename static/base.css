@@ -3,10 +3,39 @@ html, body
     font-family: 'Roboto', 'Helvetica', sans-serif;
 }
 
+.centered-parent
+{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+}
+
 .center-card
 {
     margin: 0 auto;
-    max-width: 500px;
+    width: 800px;
+    max-width: 90%;
+}
+
+.center-card .mdl-list
+{
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.center-card .mdl-grid
+{
+    margin: 0;
+}
+
+.center-card .mdl-cell
+{
+    margin: 0 auto;
 }
 
 .center-card .mdl-list__item
