@@ -73,7 +73,7 @@ def auth():
     verifycode = request.args.get('verify-code')
     search = re.search("[0-9]{10}", phonenumber)
     if(search == None):
-        return "There was an error processing your request."
+        return "There was an error processing your request. You may have been logged in from another location."
     else:
         users = db.users
         user = users.find_one({"phone_number": phonenumber})
@@ -104,7 +104,7 @@ def logout():
         #If they logout without a valid session ID
         if user == None:
             session.pop("session_id", None)
-            return "There was an error processing your request."
+            return "There was an error processing your request. You may have been logged in from another location."
         else:
             user["session_id"] = None
             user_id = user['_id']
@@ -112,7 +112,7 @@ def logout():
             session.pop("session_id", None)
             return redirect(url_for('serve_index'))
     else:
-        return "There was an error processing your request."
+        return "There was an error processing your request. You may have been logged in from another location."
 
 @app.route("/dashboard")
 def serve_dashboard():
@@ -142,7 +142,7 @@ def serve_dashboard():
                 elif user_current_survey["approved"] == False:
                     return render_template("user_unapproved_survey.html", name = user["name"], survey_id = user_current_survey_id, date = cali_date)
                 else:
-                    return "There was an error processing your request."
+                    return "There was an error processing your request. You may have been logged in from another location."
     else:
         return redirect(url_for("serve_login"))
 
@@ -213,7 +213,7 @@ def user_update():
         elif request.method == "GET":
             return render_template("user_update.html", email = user["email"], name = user["name"], affiliate = user["affiliate"])
         else:
-            return "There was an error processing your request."
+            return "There was an error processing your request. You may have been logged in from another location."
     else:
         return redirect(url_for("serve_login"))
 
@@ -231,6 +231,28 @@ def edit_other_user(phone_number):
             user2 = users.find_one({"phone_number": phone_number})
             if request.method == "GET":
                 return render_template("user_update_other.html", phonenumber = phone_number, email = user2["email"], name = user2["name"], affiliate = user2["affiliate"], scanner = user2["scanner_perm"], admin = user2["admin_perm"])
+            elif request.method == "POST":
+                user2["name"] = request.form["full-name"]
+                user2["email"] = request.form["email"]
+                user2["affiliate"] = request.form["af-status"]
+
+                if request.form.get("is-scanner") == "yes":
+                    user2["scanner_perm"] = True
+                else:
+                    user2["scanner_perm"] = False
+
+                if request.form.get("is-admin") == "yes":
+                    user2["admin_perm"] = True
+                else:
+                    user2["admin_perm"] = False
+
+                print(user2)
+
+                db.users.replace_one({"phone_number": phone_number}, user2)
+
+                return redirect("/user/" + phone_number)
+            else:
+                return "There was an error processing your request. You may have been logged in from another location."
     else:
         return redirect(url_for("serve_login"))
 
@@ -290,7 +312,7 @@ def serve_survey_page():
         return redirect(url_for("serve_dashboard"))
 
     else:
-        return "There was an error processing your request."
+        return "There was an error processing your request. You may have been logged in from another location."
 
 @app.route("/location/")
 def all_locations():
@@ -335,7 +357,7 @@ def add_location():
                 locations.insert_one(new_loc)
                 return redirect(url_for("all_locations"))
             else:
-                return "There was an error processing your request."
+                return "There was an error processing your request. You may have been logged in from another location."
     else:
         return redirect(url_for("serve_login"))
 
@@ -352,10 +374,34 @@ def location_info(loc_id):
         else:
             locations = db.locations
             location = locations.find_one({"_id": ObjectId(loc_id)})
-            return render_template("location_info.html", name = location["name"], address = location["address"])
+            return render_template("location_info.html", id = loc_id, name = location["name"], address = location["address"])
     else:
         return redirect(url_for("serve_login"))
 
+@app.route("/location/update/<loc_id>", methods = ["GET", "POST"])
+def update_location(loc_id):
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            location = locations.find_one({"_id": ObjectId(loc_id)})
+            if request.method == "GET":
+                return render_template("location_update.html", id = loc_id, name = location["name"], address = location["address"])
+            elif request.method == "POST":
+                location["name"] = request.form["loc-name"]
+                location["address"] = request.form["loc-address"]
+                locations.replace_one({"_id": ObjectId(loc_id)}, location)
+                return redirect("/location/" + loc_id)
+            else:
+                return "There was an error processing your request. You may have been logged in from another location."
+    else:
+        return redirect(url_for("serve_login"))
 
 @app.route("/scan")
 def start_scan():
@@ -380,7 +426,65 @@ def start_scan():
 
 @app.route("/scan/<loc_id>")
 def scan(loc_id):
-    return render_template("/scanner.html")
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["scanner_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            location = locations.find_one({"_id": ObjectId(loc_id)})
+            loc_name = location["name"]
+            return render_template("scan_neutral.html", loc_name = loc_name, loc_id = loc_id, time = time.time())
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/verify")
+def verify():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["scanner_perm"] != True:
+            return "Unauthorized"
+        else:
+            check = True
+            cali_time = time.time() - 28800
+            survey_id = request.args.get("survey_id")
+            loc_id = request.args.get("loc_id")
+            surveys = db.surveys
+            survey = surveys.find_one({"_id": ObjectId(survey_id)})
+            survey_user_id = survey["user_id"]
+            survey_user = users.find_one({"_id": survey_user_id})
+            if survey["_id"] != survey_user["current_survey_id"]:
+                check = False
+            elif survey["approved"] == False:
+                check = False
+            elif survey["day"] != strftime("%Y-%m-%d" , gmtime(cali_time)):
+                check = False
+
+            checkins = db.checkins
+            newcheckin = {
+                "loc_id": ObjectId(loc_id),
+                "user_id": survey_user_id,
+                "time": cali_time,
+                "day": strftime("%Y-%m-%d" , gmtime(cali_time)),
+                "result": check,
+                "retroactive_check": check
+            }
+            checkins.insert_one(newcheckin)
+            response = {
+                "name": survey_user["name"],
+                "check": check
+            }
+            return response
+    else:
+        return redirect(url_for("serve_login"))
 
 @app.errorhandler(404)
 def page_not_found(e):
