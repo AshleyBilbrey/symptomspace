@@ -1,10 +1,74 @@
 {% extends "index.html" %}
 
-{% block title %}Location Info{% endblock %}
+{% block title %}Map{% endblock %}
 
 {% block logout_display %}block{% endblock %}
 
+<h5>Map</h5>
+
 {% block content %}
-    <h5>Map</h5>
-    I'm the map I'm the map I'm the map I'm the map! Tada!
+
+I'm the map I'm the map I'm the map I'm the map! Tada!
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhwVlQbNNLO7dMB5OO1zG8wjDjTPYeYvg&callback=initMap&libraries=visualization&v=weekly">
+</script>
+
+<style type="text/css">
+  /* Always set the map height explicitly to define the size of the div
+   * element that contains the map. */
+  #map {
+    height: 30em;
+    background-color: pink;
+  }
+
+  /* Optional: Makes the sample page fill the window. */
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+<script>
+    let map, heatmap
+    
+      function initMap() {
+
+          var heatMapData = [
+          {% for x in range(r) %}
+          {location: new google.maps.LatLng({{ lats[x] }}, {{ longs[x] }}), weight: {{ problems[x]}}},
+          {% endfor %}
+          ];
+
+          var davis = new google.maps.LatLng(38.540446, -121.757613)
+
+          map = new google.maps.Map(document.getElementById('map'), {
+              center: davis,
+              zoom: 15,
+          });
+          heatmap = new google.maps.visualization.HeatmapLayer({
+                data: heatMapData
+            });
+            heatmap.setMap(map);
+      }
+
+
+
+
+
+
+
+
+        //const marker = new google.maps.Marker({
+        //  position: davis,
+        //  map: map,
+        //});
+
+    </script>
+
+    I'm the map I'm the map I'm the map I'm the map, yay!
+    <div id="map"></div>
+
 {% endblock %}
