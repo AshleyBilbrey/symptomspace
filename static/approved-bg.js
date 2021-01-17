@@ -1,24 +1,19 @@
 (function()
 {
     const possible = [
-        'https://i.imgur.com/UEW1hwx.jpg',
-        'https://i.imgur.com/fM3Av8a.jpg',
-        'https://i.imgur.com/hUWO3ZY.jpg',
-        'https://i.imgur.com/K8JyjXW.jpg',
-        'https://i.imgur.com/mVBYiPv.jpg',
-        'https://i.imgur.com/SRyM8UH.jpg',
-        'https://i.imgur.com/iCJt8de.jpg',
-        'https://i.imgur.com/03xDjcY.jpg',
-        'https://i.imgur.com/id2wmS4.jpg',
-        'https://i.imgur.com/ukyPAJC.jpg',
-        'https://i.imgur.com/m0PcIDl.jpg',
-        'https://i.imgur.com/Pbt42Bi.jpg',
-        'https://i.imgur.com/YUpXCQp.jpg'
+        "/static/images/0.jpg",
+        "/static/images/1.jpg",
+        "/static/images/2.jpg",
+        "/static/images/3.jpg",
+        "/static/images/4.jpg",
+        "/static/images/5.jpg",
+        "/static/images/6.jpg",
+        "/static/images/7.jpg",
+        "/static/images/8.jpg",
+        "/static/images/9.jpg",
+        "/static/images/10.jpg",
+        "/static/images/11.jpg"
     ]
     const bgContainer = document.querySelector('.centered-parent');
-    bgContainer.style.backgroundImage = `url('${possible[Math.floor(Math.random() * possible.length)]}')`
-    bgContainer.style.backgroundSize = 'cover';
-    bgContainer.style.backgroundPosition = 'center';
-    bgContainer.style.width = '100%';
-    bgContainer.style.minHeight = '100%';
+    bgContainer.style.backgroundImage = `url('${possible[Math.floor(Math.random() * possible.length)]}')`;
 })()
