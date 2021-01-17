@@ -85,11 +85,14 @@ def serve_login():
             print("Send text for " + phonenumber + " with code " + new_login_code)
             enable_twilio = False
             if(enable_twilio):
-                message = twilio_client.messages.create(
-                    body='Hello from symptom.space! Please use code ' + new_login_code + ' to log in! Or use link http://localhost:5000/auth?phone-number=' + phonenumber + '&verify-code=' + new_login_code + " Please do not share this code with anyone.",
-                    from_='+16504494733',
-                    to='+1' + phonenumber
-                )
+                try:
+                    message = twilio_client.messages.create(
+                        body='Hello from symptom.space! Please use code ' + new_login_code + ' to log in! Or use link http://localhost:5000/auth?phone-number=' + phonenumber + '&verify-code=' + new_login_code + " Please do not share this code with anyone.",
+                        from_='+16504494733',
+                        to='+1' + phonenumber
+                    )
+                except:
+                    return: "We're sorry, there was an issue sending a code to that phone number. Please try again."
                 print(message.sid)
             return render_template("login2.html", phone_number = phonenumber)
     else:
@@ -537,6 +540,19 @@ def verify():
                 "check": check
             }
             return response
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/positive")
+def positive():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        else:
+            return render_template("positive.html", name = user["name"])
     else:
         return redirect(url_for("serve_login"))
 
