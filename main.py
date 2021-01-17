@@ -1,10 +1,12 @@
-from flask import Flask, request, render_template, session, redirect, url_for
+from flask import Flask, request, render_template, session, redirect, url_for, send_file
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import re
 import time
 import random
 import string
+import qrcode
+import io
 mongoclient = MongoClient()
 db = mongoclient.symptomspace_database
 app = Flask(__name__)
@@ -145,6 +147,13 @@ def user_update():
         return render_template("user_update.html")
     else:
         return "There was an error processing your request."
+
+@app.route("/qr/<code>")
+def make_qr(code):
+    img_IO = io.BytesIO()
+    qrcode.make(code).save(img_IO, 'png')
+    img_IO.seek(0)
+    return send_file(img_IO, mimetype='image/png')
 
 
 #Delete this later!
