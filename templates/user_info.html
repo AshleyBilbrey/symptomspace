@@ -37,6 +37,14 @@
       </li>
       <li class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-icon">coronavirus</i>
+        {% for x in exposures %}
+            {{ x }} | 
+        {% endfor %}
+      </span>
+      </li>
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
         <i class="material-icons mdl-list__item-icon">qr_code</i>
         {{ scanner }}
       </span>
@@ -52,6 +60,6 @@
     <a href="/user/update/{{ phonenumber }}" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Update Info for {{ phonenumber }}</a>
     {% else %}
     <a href="/user/update" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Update Info</a>
-    <a href="/positive" style="background-color: red;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Report Positive COVID-19 Test</a>
+    <a href="/positive" style="background-color: red;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent mdl-color-text--grey-100">Report Positive COVID-19 Test</a>
     {% endif %}
 {% endblock %}

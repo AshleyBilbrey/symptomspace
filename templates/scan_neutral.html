@@ -31,17 +31,20 @@
   </button>
 </div>
 
-  <br>
+<br>
 
-  <p>Name: <span id="name"></span></p>
-  <p>Status: <span id="status"></span></p>
-
-  <form action="/verify" method="GET">
-      <label for="location">Location ID:</label>
-      <input type="text" id="location" name="location" value="{{ loc_id }}"><br>
-      <label for="survey_id">Survey ID:</label>
-      <input type="text" id="survey_id" name="survey_id"><br>
-      <input type="submit" value="Submit">
+  <form id="scanner-form" action="/verify" method="GET">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="loc_id" name="loc_id" value="{{ loc_id }}">
+      <label class="mdl-textfield__label" for="sample1">Location ID</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="survey_id" name="survey_id">
+      <label class="mdl-textfield__label" for="sample1">Survey ID</label>
+    </div>
+    <button id="form-submit" type="submit" value="Submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+      Submit
+    </button>
   </form>
 <div>
   <label for="sourceSelect">Change video source:</label>
@@ -50,22 +53,6 @@
     </select>
   </div>
 </div>
-
-<div>
-  <label for="recordType" >Location: </label>
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <select id="recordType" class="mdl-textfield__input" size="1">
-          <option value="tercero_dining_hall">Tercero Dining Hall</option>
-          <option value="memorial_union">Memorial Union</option>
-          <option value="latitude">Latitude</option>
-      </select>
-  </div>
-</div>
-
-<br>
-
-<label>Result:</label>
-<pre><code id="result"></code></pre>
 
 
 <audio id="accept" src="{{ url_for('static', filename='audio/accept.mp3') }}" preload="auto" controls="none" style="display: none;"></audio>

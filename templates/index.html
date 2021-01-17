@@ -17,12 +17,6 @@
         margin: 0 auto;
         padding: 0 1rem;
     }
-
-    main.mdl-layout__content {
-    	display: flex !important;
-		  justify-content: center;
-		  align-items: center;
-    }
 </style>
 <body class="mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -35,7 +29,7 @@
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="/" class="mdl-layout__tab {% if active == 'home' %} is-active{% endif %}">Home</a>
           <a href="/dashboard" class="mdl-layout__tab {% if active == 'dashboard' %} is-active{% endif %}">Dashboard</a>
-          {% if active == 'survey'%}<a href="/dashboard" class="mdl-layout__tab is-active">Dashboard</a>{% endif %}
+          {% if active == 'survey'%}<a href="/dashboard" class="mdl-layout__tab is-active">Survey</a>{% endif %}
           <a href="/user" class="mdl-layout__tab{% if active == 'profile' %} is-active{% endif %}">Profile</a>
           {% if is_scanner %}<a href="/scan" class="mdl-layout__tab{% if active == 'scan' %} is-active{% endif %}">Scan</a>{% endif %}
           {% if is_admin %}<a href="/user/all" class="mdl-layout__tab{% if active == 'users' %} is-active{% endif %}">Users</a>{% endif %}
@@ -56,8 +50,8 @@
               {% endblock %}
             </div>
         </div>
-      </main>
-      <footer class="mdl-mega-footer">
+
+        <footer class="mdl-mega-footer">
           <div class="mdl-mega-footer--middle-section">
             <div class="mdl-mega-footer--drop-down-section">
               <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
