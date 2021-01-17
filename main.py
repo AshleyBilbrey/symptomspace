@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, session, redirect, url_for, jsonify
+from flask import Flask, request, render_template, session, redirect, url_for
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import re
@@ -8,18 +8,6 @@ import string
 mongoclient = MongoClient()
 db = mongoclient.symptomspace_database
 app = Flask(__name__)
-
-@app.route("/scanner")
-def scan():
-    return render_template('scan_neutral.html')
-
-@app.route("/ajax", methods=['POST'])
-def ajax():
-    data = request.form['data']
-
-    #logic here
-
-    return jsonify(name=data, status="approved")
 
 @app.route("/")
 def serve_index():
