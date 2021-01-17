@@ -2,10 +2,6 @@
 	width: 100%;
 }
 
-.mdl-textfield {
-	margin-left: 1rem;
-}
-
 label, select {
 	font-size: 1.15rem;
 }
@@ -14,4 +10,10 @@ pre {
 	padding: 1rem;
 	background-color: #fff;
 	width: 100%;
+}
+
+#form-submit
+{
+	display: block;
+	margin-top: 8px;
 }
