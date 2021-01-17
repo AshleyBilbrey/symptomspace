@@ -260,6 +260,10 @@ def serve_survey_page():
     else:
         return "There was an error processing your request."
 
+@app.route("/scan/<loc_id>")
+def scan(loc_id):
+    return render_template("/scan_neutral.html")
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
