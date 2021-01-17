@@ -525,6 +525,9 @@ def verify():
                 check = False
             elif survey["day"] != strftime("%Y-%m-%d" , gmtime(cali_time)):
                 check = False
+            elif db.locations.find_one({"_id": ObjectId(loc_id)}) == None:
+                print(loc_id)
+                return "error"
 
             checkins = db.checkins
             newcheckin = {
@@ -570,18 +573,20 @@ def confirm_positive():
             fortnite = cali_time - 1209600
             exposurelists = db.exposurelists
             people_exposed = []
-            exposurelist_id = exposurelists.insert_one(new_exposurelist).inserted_id
             checkins = db.checkins
             for user_check in checkins.find({"user_id": user["_id"], "time": {"$gt": fortnite}}):
+                print("Checking host's checkin" + str(user_check["time"]))
                 user_check["retroactive_check"] = False
-                replace_one({"_id": user_check["_id"]})
-                mt = user_check["time"] - 600
-                pt = user_check["time"] + 600
-                for other_check in checkins.find({"loc_id": user_chec["loc_id"], "time": {"$gt": mt, "$lt": pt} }):
+                checkins.replace_one({"_id": user_check["_id"]}, user_check)
+                mt = (user_check["time"] - 600)
+                pt = (user_check["time"] + 600)
+                #print(list(db.checkins.find({"loc_id": user_check["loc_id"], "time": {"$gt": mt}, "time": {"$lt", pt}})))
+                for other_check in db.checkins.find({"loc_id": user_check["loc_id"], "time": {"$gt": mt}, "time": {"$lt": pt}}):
+                    print("Checking other person's checkin at " + users.find_one({"_id": other_check["user_id"]})["name"])
                     if(other_check["user_id"] != user["_id"]):
-                        update_exposure = users.find_one({"_id", other_check["user_id"]})
+                        update_exposure = users.find_one({"_id": other_check["user_id"]})
                         update_exposure["exposures"].append(strftime("%Y-%m-%d" , gmtime(other_check["time"])))
-                        users.replace_one({"_id", other_check["user_id"]}, update_exposure)
+                        users.replace_one({"_id": other_check["user_id"]}, update_exposure)
                     add_user = True
                     for u in people_exposed:
                         if u == other_check["user_id"]:
@@ -590,8 +595,8 @@ def confirm_positive():
                         people_exposed.append(other_check["user_id"])
 
             enable_twilio = False
-            for peeps in people_exposed:
-                belonging_peep = users.find_one({"_id", peep})
+            for peep in people_exposed:
+                belonging_peep = users.find_one({"_id": peep})
                 recent_exposure = belonging_peep["exposures"][-1]
                 print("Send message to " + belonging_peep["phone_number"] + " for exposure on date " + recent_exposure)
                 if(enable_twilio):
@@ -604,13 +609,14 @@ def confirm_positive():
                     except:
                         print("There was a problem sending a text")
 
-            new_exposurelist = {
+            new_el = {
                 "exposure_host": user["_id"],
                 "reported_time": cali_time,
                 "reported_day": strftime("%Y-%m-%d" , gmtime(cali_time)),
                 "people_exposed": people_exposed
             }
-            exposurelists.insert_one(new_exposurelist)
+            exposurelists.insert_one(new_el)
+            print("DONEEEE!")
             return render_template("positive_confirm.html")
     else:
         return redirect(url_for("serve_login"))
