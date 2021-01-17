@@ -3,7 +3,20 @@
 {% block title %}Survey{% endblock %}
 
 {% block styles %}
+<style type="text/css">
+  
 
+  label {
+    height: auto !important;
+    display: block !important;
+    margin-bottom: .5rem !important;
+  }
+
+  form p {
+    font-size: 1.1rem;
+  }
+
+</style> 
 {% endblock %}
 
 {% block scripts %}
@@ -13,101 +26,173 @@
 {% block content %}
 
 <form action="/action_page.php" id="vacQ">
-  <p>Have you received a flu vaccination after August 1, 2020?
-OR Do you have an approved exemption from the flu vaccination mandate that allows you to come on campus?
-(May be subject to verification):</p>
+  <p>Have you received a flu vaccination after August 1, 2020?<br><strong>&nbsp; &nbsp; &nbsp;OR</strong><br>
+Do you have an approved exemption from the flu vaccination&nbsp;mandate that allows you to come on campus?<br>
+(<em>May be subject to verification</em>)</p>
 
-  <input type="radio" id="fluVacP" name="fluVacP" value="flueVac">
-  <label for="vehicle1"> Yes</label><br>
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="flu-option-1">
+    <input class="mdl-radio__button" type="radio" id="flu-option-1" name="flu" value="yes">
+    <span class="mdl-radio__label">Yes</span>
+  </label>
 
-  <input type="radio" id="flueVacN" name="fluVacN" value="flueVac">
-  <label for="vehicle2"> No</label><br>
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="flu-option-2">
+    <input class="mdl-radio__button" type="radio" id="flu-option-2" name="flu" value="no">
+    <span class="mdl-radio__label">No</span>
+  </label>
 
+  <br>
+  <br>
 
-  <p>Have you participated in COVID-19 testing within the past seven days?
-OR Do you have an appointment for COVID-19 testing today?   
-OR Have you been directed by a campus healthcare official to discontinue testing at this time?
-(May be subject to verification):</p>
+  <p>Have you participated in COVID-19 testing within the past seven days? <br>
 
+  &nbsp; &nbsp; &nbsp;<strong>OR</strong> <br>
 
-  <input type="radio" id="testCovMet" name="testCovMet" value="testCov">
-  <label for="vehicle1"> Yes</label><br>
-
-  <input type="radio" id="testCovFai" name="testCovMet" value="testCov">
-  <label for="vehicle2"> No</label><br>
-
-  <input type="radio" id="noAcc" name="testCovNul" value="testCov">
-  <label for="vehicle2"> I am not accessing a UC Davis facility inside Yolo County</label><br>
-
-  <p>Please check all symptoms present in the past 24 hours:
-All options, except the first (Fever), describe symptoms that are new and not from a known or chronic condition.</p>
-
-  <input type="checkbox" id="symServ1" name="symSurvey" value="testCov">
-  <label for="vehicle1"> Fever (> 100.4°F/38°C)</label><br>
-
-  <input type="checkbox" id="symServ2" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Chills or Shaking</label><br>
-
-  <input type="checkbox" id="symServ3" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Cough</label><br>
-
-  <input type="checkbox" id="symServ4" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Shortness of Breath/Difficult Breathing</label><br>
-
-  <input type="checkbox" id="symServ5" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Loss of Taste or Smell</label><br>
-
-  <input type="checkbox" id="symServ6" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Sore Throat</label><br>
-
-  <input type="checkbox" id="symServ7" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Runny Nose/Sinus Congestion</label><br>
-
-  <input type="checkbox" id="symServ8" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Diarrhea</label><br>
-
-  <input type="checkbox" id="symServ9" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Muscle Pains/Body Aches</label><br>
-
-  <input type="checkbox" id="symServ10" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Headache</label><br>
-
-  <input type="checkbox" id="symServ11" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Unusual Fatigue</label><br>
-
-  <input type="checkbox" id="symServ12" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Eye Redness with or without Discharge</label><br>
-
-  <input type="checkbox" id="symServ13" name="symSurvey" value="testCov">
-  <label for="vehicle2"> Nausea or Vomiting</label><br>
-
-  <input type="checkbox" id="symServTrue" name="symSurvey" value="testCov">
-  <label for="vehicle2"> None of the Above</label><br>
+  Do you have an appointment for COVID-19 testing today? <br>
 
 
-  <p>Have you tested positive for COVID-19 within the past 10 days?</p>
-  <input type="radio" id="testTrue" name="covidTest" value="testCov">
-  <label for="vehicle1"> Yes</label><br>
+  <strong>&nbsp; &nbsp; &nbsp;OR</strong> <br>
 
-  <input type="radio" id="testFalse" name="covidTest" value="testCov">
-  <label for="vehicle2"> No</label><br>
+ Have you been directed by a campus healthcare official to discontinue testing at this time? <br>
+
+  (<em>May be subject to verification</em>)</p>
+
+  
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="covid-test-1">
+    <input class="mdl-radio__button" type="radio" id="covid-test-1" name="covid-test" value="yes">
+    <span class="mdl-radio__label"> Yes (to one or more above)</span>
+  </label>
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="covid-test-2">
+    <input class="mdl-radio__button" type="radio" id="covid-test-2" name="covid-test" value="no">
+    <span class="mdl-radio__label"> No</span>
+  </label>
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="covid-test-3">
+    <input class="mdl-radio__button" type="radio" id="covid-test-3" name="covid-test" value="n/a">
+    <span class="mdl-radio__label"> I am not accessing a UC Davis facility inside Yolo County</span>
+  </label>
+
+  <br>
+  <br>
+
+  <p>Please check all symptoms present in the past 24 hours:<br>
+<span style="color:#c0392b;"><strong>All options, except the first (Fever), describe symptoms that are new and not from a known or chronic condition</strong><em>.</em></span></p>
 
 
- <p>Have you been in Close Contact with a COVID-19 Positive person within the past 10 days
-Close Contact is defined as closer than 6 feet for greater than 15 minutes</p>
-  <input type="radio" id="contactTrue" name="testContact" value="testCov">
-  <label for="vehicle1"> Yes</label><br>
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-1">
+    <input type="checkbox" id="symptom-1" class="mdl-checkbox__input" name="symptoms" value="1">
+    <span class="mdl-checkbox__label"> Fever (> 100.4°F/38°C)</span>
+  </label>
 
-  <input type="radio" id="contactFalse" name="testContact" value="testCov">
-  <label for="vehicle2"> No</label><br>
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-2">
+    <input type="checkbox" id="symptom-2" class="mdl-checkbox__input" name="symptoms" value="2">
+    <span class="mdl-checkbox__label"> Chills or Shaking</span>
+  </label>
 
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-3">
+    <input type="checkbox" id="symptom-3" class="mdl-checkbox__input" name="symptoms" value="3">
+    <span class="mdl-checkbox__label"> Cough</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-4">
+    <input type="checkbox" id="symptom-4" class="mdl-checkbox__input" name="symptoms" value="4">
+    <span class="mdl-checkbox__label"> Shortness of Breath/Difficult Breathing</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-5">
+    <input type="checkbox" id="symptom-5" class="mdl-checkbox__input" name="symptoms" value="5">
+    <span class="mdl-checkbox__label"> Loss of Taste or Smell</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-6">
+    <input type="checkbox" id="symptom-6" class="mdl-checkbox__input" name="symptoms" value="6">
+    <span class="mdl-checkbox__label"> Sore Throat</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-7">
+    <input type="checkbox" id="symptom-7" class="mdl-checkbox__input" name="symptoms" value="7">
+    <span class="mdl-checkbox__label"> Runny Nose/Sinus Congestion</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-8">
+    <input type="checkbox" id="symptom-8" class="mdl-checkbox__input" name="symptoms" value="8">
+    <span class="mdl-checkbox__label"> Diarrhea</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-9">
+    <input type="checkbox" id="symptom-9" class="mdl-checkbox__input" name="symptoms" value="9">
+    <span class="mdl-checkbox__label"> Muscle Pains/Body Aches</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-10">
+    <input type="checkbox" id="symptom-10" class="mdl-checkbox__input" name="symptoms" value="10">
+    <span class="mdl-checkbox__label"> Headache</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-11">
+    <input type="checkbox" id="symptom-11" class="mdl-checkbox__input" name="symptoms" value="11">
+    <span class="mdl-checkbox__label"> Unusual Fatigue</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-12">
+    <input type="checkbox" id="symptom-12" class="mdl-checkbox__input" name="symptoms" value="12">
+    <span class="mdl-checkbox__label"> Eye Redness with or without Discharge</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-13">
+    <input type="checkbox" id="symptom-13" class="mdl-checkbox__input" name="symptoms" value="13">
+    <span class="mdl-checkbox__label"> Nausea or Vomiting</span>
+  </label>
+
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="symptom-14">
+    <input type="checkbox" id="symptom-14" class="mdl-checkbox__input" name="symptoms" value="NONE">
+    <span class="mdl-checkbox__label"> None of the Above</span>
+  </label>
+
+  <br>
+  <br>
+
+  <p>Have you been tested <strong>positive&nbsp;</strong>for COVID-19 within the past 10 days?</p>
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="positive-1">
+    <input class="mdl-radio__button" type="radio" id="positive-1" name="positive" value="yes">
+    <span class="mdl-radio__label">Yes</span>
+  </label>
+
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="positive-2">
+    <input class="mdl-radio__button" type="radio" id="positive-2" name="positive" value="no">
+    <span class="mdl-radio__label">No</span>
+  </label>
+
+  <br>
+  <br>
+
+
+ <p>Have you been in Close Contact with a COVID-19&nbsp;<strong>positive</strong>&nbsp;person within the past 10 days?<br>
+<span style="color:#c0392b;"><strong><em>Close Contact is defined as closer than 6 feet for greater than 15 minutes.</em></strong></span></p>
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="close-1">
+    <input class="mdl-radio__button" type="radio" id="close-1" name="close-contact" value="yes">
+    <span class="mdl-radio__label">Yes</span>
+  </label>
+
+  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="close-2">
+    <input class="mdl-radio__button" type="radio" id="close-2" name="close-contact" value="no">
+    <span class="mdl-radio__label">No</span>
+  </label>
+
+<br>
+  <br>
 
 <p>To the best of my ability, I certify answers to the preceding questions are true and correct.</p>
-  <input type="radio" id="certi" name="finalQuest" value="testCov">
-  <label for="vehicle1"> Yes</label><br>
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="certify">
+    <input type="checkbox" id="certify" class="mdl-checkbox__input" name="certify" value="yes">
+    <span class="mdl-checkbox__label"> Yes</span>
+  </label>
+
+  <br>
+  <br>
 
  
-  <input type="submit" value="Submit">
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit" value="submit">
+  Submit
+</button>
 
 </form>
 {% endblock %}
