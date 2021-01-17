@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-orange.min.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="manifest" href="/static/site.webmanifest">
+    <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+
     {% block styles %}{% endblock %}
 </head>
 <style>
@@ -53,7 +64,9 @@
         <div class="mdl-layout__tab-panel is-active" id="overview">
           <div class="centered-container">
             {% block content %}
-              <p>Welcome to symptom.space! This is a demo project for HackDavis 2021! Do your symptom survey here.</p>
+              <p>Welcome to symptom.space! This is a demo project for HackDavis 2021! This is a project intended to streamline the existing COVID-19 survey procedures.
+              To be clear, this is only a demo right now and not the official symptom survey. Therefore, feel free to mess around and answer some questions wrong.</p><br>
+              <p>Thank you to HackDavis, Doordash, Twilio, and GoogleCloud for helping power this project!</p>
               {% if logged_in %}<a href="/dashboard" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go to Dashboard</a>
               {% else %}<a href="/login" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Login</a>{% endif %}
               {% if is_scanner %}<a href="/scan" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go to Scanner</a>{% endif %}
@@ -88,10 +101,10 @@
               <ul class="mdl-mega-footer--link-list">
                 <li><a href="https://github.com/AshleyBilbrey/symptomspace">Source Code</a></li>
               </ul>
-            </div>            
+            </div>
           </div>
-        </footer> 
-        </main>     
+        </footer>
+        </main>
     </div>
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     {% block scripts %}{% endblock %}
