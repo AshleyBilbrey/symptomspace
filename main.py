@@ -527,6 +527,8 @@ def verify():
             cali_time = time.time() - 28800
             survey_id = request.args.get("survey_id")
             loc_id = request.args.get("loc_id")
+            print("SURVEY_ID:" + survey_id)
+            print("LOC_ID: " + loc_id)
             surveys = db.surveys
             survey = surveys.find_one({"_id": ObjectId(survey_id)})
             survey_user_id = survey["user_id"]
