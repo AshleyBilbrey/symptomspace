@@ -3,3 +3,5 @@
 .vscode/
 .ini
 /secrets/secret_key.txt
+/secrets/twilio_secret.txt
+/secrets/twilio_sid.txt

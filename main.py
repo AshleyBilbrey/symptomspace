@@ -1,7 +1,9 @@
 from flask import Flask, request, render_template, session, redirect, url_for, send_file
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from twilio.rest import Client
 import re
+import os
 import time
 from time import gmtime, strftime
 import random
@@ -11,6 +13,8 @@ import io
 mongoclient = MongoClient()
 db = mongoclient.symptomspace_database
 app = Flask(__name__)
+
+twilio_client = Client(open("./secrets/twilio_sid.txt", "r").read(34), open("./secrets/twilio_secret.txt", "r").read(32))
 
 @app.route("/")
 def serve_index():
@@ -79,6 +83,14 @@ def serve_login():
                 }
                 users.insert_one(newuser)
             print("Send text for " + phonenumber + " with code " + new_login_code)
+            enable_twilio = False
+            if(enable_twilio):
+                message = twilio_client.messages.create(
+                    body='Hello from symptom.space! Please use code ' + new_login_code + ' to log in! Or use link http://localhost:5000/auth?phone-number=' + phonenumber + '&verify-code=' + new_login_code + " Please do not share this code with anyone.",
+                    from_='+16504494733',
+                    to='+1' + phonenumber
+                )
+                print(message.sid)
             return render_template("login2.html", phone_number = phonenumber)
     else:
         return "Error"
@@ -534,6 +546,5 @@ def page_not_found(e):
 
 if __name__ == '__main__':
     f = open("./secrets/secret_key.txt", "r")
-    print("SECRET KEY SHH: " + f.read(25))
     app.secret_key = f.read(25)
     app.run()
