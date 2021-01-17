@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def serve_index():
-    return render_template('index.html')
+    return render_template('user_info.html')
 
 @app.route("/login", methods = ["POST", "GET"])
 def serve_login():
