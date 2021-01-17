@@ -1,4 +1,8 @@
 var data = "";
+var accept = document.getElementById('accept');
+var reject = document.getElementById('reject');
+var nametext = document.getElementById('name');
+var statustext = document.getElementById('status');
 
 function decodeContinuously(codeReader, selectedDeviceId) {
   codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, 'video', (result, err) => {
@@ -10,9 +14,44 @@ function decodeContinuously(codeReader, selectedDeviceId) {
         document.getElementById('result').textContent = result.text;
         data = result.text;
 
-        //###################################################################
-        //DO STUFF WITH QR DATA HERE...SENDING TO SERVER AND GETTING RESPONSE
-        //###################################################################
+        //#####################################################################
+        //#DO STUFF WITH QR DATA HERE...SENDING TO SERVER AND GETTING RESPONSE#
+        //#####################################################################
+
+        var req = new XMLHttpRequest()
+        req.onreadystatechange = function()
+        {
+            if (req.readyState == 4)
+            {
+                if (req.status != 200)
+                {
+                    //error handling code here
+                }
+                else
+                {
+                    var response = JSON.parse(req.responseText);
+                    var name = response.name;
+                    var status = response.status;
+
+                    nametext.textContent = name;
+                    statustext.textContent = status;
+
+                    if (status == "approved") {
+                      accept.currentTime = 0;
+                      accept.play();
+                    }
+                    else {
+                      reject.currentTime = 0;
+                      reject.play();
+                    }
+                }
+            }
+        }
+    
+        req.open('POST', '/ajax') //route that were gonna send to
+        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        var postVars = 'data='+data
+        req.send(postVars)
 
       }
     }
@@ -73,4 +112,4 @@ window.addEventListener('load', function () {
     .catch((err) => {
       console.error(err)
     })
-})
+});
