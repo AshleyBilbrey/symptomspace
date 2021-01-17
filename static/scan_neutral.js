@@ -28,25 +28,29 @@ function decodeContinuously(codeReader, selectedDeviceId) {
 
       if (result.text != data) {
         accept();
+
         var surveyText = document.getElementById('survey_id');
         surveyText.parentElement.classList.add('is-dirty');
         surveyText.value = result.text;
-
-        document.getElementById('scanner-form').submit();
+        $.get( '/verify', $('#scanner-form').serialize()).done(response => 
+        {
+          console.log(response);
+        });
+        
       }
     }
 
-    if (err) {
-      if (err instanceof ZXing.NotFoundException) {
-        console.log('No QR code found.');
-      }
-      else if (err instanceof ZXing.ChecksumException) {
-        console.log('A code was found, but it\'s read value was not valid.');
-      }
-      else if (err instanceof ZXing.FormatException) {
-        console.log('A code was found, but it was in a invalid format.');
-      }
-    }
+    // if (err) {
+    //   if (err instanceof ZXing.NotFoundException) {
+    //     console.log('No QR code found.');
+    //   }
+    //   else if (err instanceof ZXing.ChecksumException) {
+    //     console.log('A code was found, but it\'s read value was not valid.');
+    //   }
+    //   else if (err instanceof ZXing.FormatException) {
+    //     console.log('A code was found, but it was in a invalid format.');
+    //   }
+    // }
   })
 }
 
