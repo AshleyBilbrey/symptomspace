@@ -225,24 +225,21 @@ def serve_survey_page():
     elif request.method == "POST":
         print(request.form)
         approved = True
-        if request.form["flu"] != "yes":
-            print("No flu test")
-            approved = False
-        if request.form["covid-test"] == "no":
-            print("No covid test")
-            approved = False
-        if request.form["symptoms"] != "NONE":
-            print("Symptoms nono")
-            approved = False
-        if request.form["positive"] != "no":
-            print("Positive test")
-            approved = False
-        if request.form["close-contact"] != "no":
-            print("In close contact")
-            approved = False
-        if request.form["certify"] == None:
-            print("Not true")
-            approved = False
+        try:
+            if request.form["flu"] != "yes":
+                approved = False
+            if request.form["covid-test"] == "no":
+                approved = False
+            if request.form["symptoms"] != "NONE":
+                approved = False
+            if request.form["positive"] != "no":
+                approved = False
+            if request.form["close-contact"] != "no":
+                approved = False
+            if request.form["certify"] == None:
+                approved = False
+        except:
+            return render_template("survey.html", status = 1)
 
         cali_time = time.time() - 28800
         new_survey = {
@@ -259,6 +256,71 @@ def serve_survey_page():
 
     else:
         return "There was an error processing your request."
+
+@app.route("/location/")
+def all_locations():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            loc_names = []
+            loc_ids = []
+            for loc in locations.find():
+                loc_names.append(loc["name"])
+                loc_ids.append(loc["_id"])
+            return render_template("all_locations.html", loc_names = loc_names, loc_ids = loc_ids, r = locations.find().count())
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/location/add", methods = ["GET", "POST"])
+def add_location():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            if request.method == "GET":
+                return render_template("add_location.html")
+            elif request.method == "POST":
+                locations = db.locations
+                new_loc = {
+                    "name": request.form["loc-name"],
+                    "address": request.form["loc-address"]
+                }
+                locations.insert_one(new_loc)
+                return redirect(url_for("all_locations"))
+            else:
+                return "There was an error processing your request."
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/location/<loc_id>")
+def location_info(loc_id):
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            location = locations.find_one({"_id": ObjectId(loc_id)})
+            return render_template("location_info.html", name = location["name"], address = location["address"])
+    else:
+        return redirect(url_for("serve_login"))
+
 
 @app.route("/scan/<loc_id>")
 def scan(loc_id):
