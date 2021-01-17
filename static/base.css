@@ -9,6 +9,11 @@ html, body
     max-width: 500px;
 }
 
+.center-card .mdl-list__item
+{
+    height: 60px;
+}
+
 .mdl-layout__tab-bar-container 
 {
     height: 64px;
