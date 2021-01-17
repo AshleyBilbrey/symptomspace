@@ -14,7 +14,8 @@ function decodeContinuously(codeReader, selectedDeviceId) {
         var surveyText = document.getElementById('survey_id');
         surveyText.parentElement.classList.add('is-dirty');
         surveyText.value = result.text;
-        data = result.text;
+
+        document.getElementById('scanner-form').submit();
       }
     }
 
