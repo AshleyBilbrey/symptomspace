@@ -11,48 +11,10 @@ function decodeContinuously(codeReader, selectedDeviceId) {
       console.log('Found QR code!', result);
 
       if (result.text != data) {
-        document.getElementById('result').textContent = result.text;
+        var surveyText = document.getElementById('survey_id');
+        surveyText.parentElement.classList.add('is-dirty');
+        surveyText.value = result.text;
         data = result.text;
-
-        //#####################################################################
-        //#DO STUFF WITH QR DATA HERE...SENDING TO SERVER AND GETTING RESPONSE#
-        //#####################################################################
-
-        var req = new XMLHttpRequest()
-        req.onreadystatechange = function()
-        {
-            if (req.readyState == 4)
-            {
-                if (req.status != 200)
-                {
-                    //error handling code here
-                }
-                else
-                {
-                    var response = JSON.parse(req.responseText);
-                    var name = response.name;
-                    var status = response.check;
-
-                    nametext.textContent = name;
-                    statustext.textContent = status;
-
-                    if (status == true) {
-                      accept.currentTime = 0;
-                      accept.play();
-                    }
-                    else {
-                      reject.currentTime = 0;
-                      reject.play();
-                    }
-                }
-            }
-        }
-
-        req.open('GET', '/verify') //route that were gonna send to
-        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        var postVars = 'data='+data
-        req.send(postVars)
-
       }
     }
 
@@ -104,7 +66,10 @@ window.addEventListener('load', function () {
 
       document.getElementById('resetButton').addEventListener('click', () => {
         codeReader.reset()
-        document.getElementById('result').textContent = '';
+        var surveyText = document.getElementById('survey_id');
+        surveyText.parentElement.classList.remove('is-dirty');
+        surveyText.value = '';
+        data = ""
         console.log('Reset.')
       })
 
