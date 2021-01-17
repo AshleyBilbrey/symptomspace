@@ -64,8 +64,9 @@
         <div class="mdl-layout__tab-panel is-active" id="overview">
           <div class="centered-container">
             {% block content %}
-              <p>Welcome to symptom.space! This is a demo project for HackDavis 2021! This is a project intended to streamline the existing COVID-19 survey procedures at UC Davis.
-              To be clear, this is only a demo right now and not the official symptom survey. Therefore, feel free to mess around and answer some questions wrong.</p><br>
+              <p>Welcome to symptom.space! This is a demo project for HackDavis 2021! This is a project intended to streamline the existing COVID-19 survey procedures.
+              To be clear, this is only a demo right now and not the official symptom survey. Therefore, feel free to mess around and answer some questions wrong.</p>
+              <p>Inspirational quotes courtesy of <a href="https://parade.com/1012592/kelseypelzer/quotes-for-tough-times/">Parade</a></p>
               <p>Thank you to HackDavis, Doordash, Twilio, and GoogleCloud for helping power this project!</p>
               {% if logged_in %}<a href="/dashboard" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go to Dashboard</a>
               {% else %}<a href="/login" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Login</a>{% endif %}
