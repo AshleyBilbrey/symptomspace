@@ -154,7 +154,23 @@ def user_info():
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"])
+        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"], scanner = user["scanner_perm"], admin = user["admin_perm"])
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/user/<phone_number>")
+def other_user(phone_number):
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            user2 = users.find_one({"phone_number": phone_number})
+            return render_template("user_info.html", phonenumber = user2["phone_number"], name = user2["name"], email = user2["email"], affiliate = user2["affiliate"], status = 1, scanner = user2["scanner_perm"], admin = user2["admin_perm"])
     else:
         return redirect(url_for("serve_login"))
 
@@ -186,18 +202,37 @@ def user_update():
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-    if request.method == "POST":
-        user["name"] = request.form["full-name"]
-        user["email"] = request.form["email"]
-        user["affiliate"] = request.form["af-status"]
-        user["completed_profile"] = True
-        user_id = user['_id']
-        users.replace_one({'_id': ObjectId(user_id)}, user)
-        return redirect(url_for("serve_dashboard"))
-    elif request.method == "GET":
-        return render_template("user_update.html")
+        if request.method == "POST":
+            user["name"] = request.form["full-name"]
+            user["email"] = request.form["email"]
+            user["affiliate"] = request.form["af-status"]
+            user["completed_profile"] = True
+            user_id = user['_id']
+            users.replace_one({'_id': ObjectId(user_id)}, user)
+            return redirect(url_for("user_info"))
+        elif request.method == "GET":
+            return render_template("user_update.html", email = user["email"], name = user["name"], affiliate = user["affiliate"])
+        else:
+            return "There was an error processing your request."
     else:
-        return "There was an error processing your request."
+        return redirect(url_for("serve_login"))
+
+@app.route("/user/update/<phone_number>", methods = ["GET", "POST"])
+def edit_other_user(phone_number):
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            user2 = users.find_one({"phone_number": phone_number})
+            if request.method == "GET":
+                return render_template("user_update_other.html", phonenumber = phone_number, email = user2["email"], name = user2["name"], affiliate = user2["affiliate"], scanner = user2["scanner_perm"], admin = user2["admin_perm"])
+    else:
+        return redirect(url_for("serve_login"))
 
 @app.route("/qr/<code>")
 def make_qr(code):
@@ -322,9 +357,30 @@ def location_info(loc_id):
         return redirect(url_for("serve_login"))
 
 
+@app.route("/scan")
+def start_scan():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["scanner_perm"] != True:
+            return "Unauthorized"
+        else:
+            locations = db.locations
+            loc_names = []
+            loc_ids = []
+            for loc in locations.find():
+                loc_names.append(loc["name"])
+                loc_ids.append(loc["_id"])
+            return render_template("start_scanning.html", loc_names = loc_names, loc_ids = loc_ids, r = locations.find().count())
+    else:
+        return redirect(url_for("serve_login"))
+
 @app.route("/scan/<loc_id>")
 def scan(loc_id):
-    return render_template("/scan_neutral.html")
+    return render_template("/scanner.html")
 
 @app.errorhandler(404)
 def page_not_found(e):

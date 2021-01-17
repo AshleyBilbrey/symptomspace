@@ -1,19 +1,21 @@
 {% extends "index.html" %}
 
-{% block title %}Users{% endblock %}
+{% block title %}Locations{% endblock %}
 
 {% block logout_display %}block{% endblock %}
 
 {% block content %}
-<h5>All Users:</h5>
+<h5>Start Scanning:</h5>
+Click on a location to start scanning.
 
 <ul class="demo-list-item mdl-list">
 	{% for x in range(r) %}
   		<li class="mdl-list__item">
 	    <span class="mdl-list__item-primary-content">
-	      <a href="/user/{{ numbers[x] }}">{{ names[x] }}</a>
+	      <a href="/scan/{{ loc_ids[x] }}">{{ loc_names[x] }}</a>
 	    </span>
 	  </li>
 	{% endfor %}
 </ul>
+
 {% endblock %}
