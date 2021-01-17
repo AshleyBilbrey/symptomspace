@@ -94,10 +94,7 @@ window.addEventListener('load', function () {
 
       document.getElementById('resetButton').addEventListener('click', () => {
         codeReader.reset()
-        var surveyText = document.getElementById('survey_id');
-        surveyText.parentElement.classList.remove('is-dirty');
-        surveyText.value = '';
-        data = ""
+        survey_id = ""
         console.log('Reset.')
       })
 
