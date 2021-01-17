@@ -23,12 +23,6 @@ html, body
     margin: 0;
 }
 
-.center-card .mdl-cell--stretch
-{
-    display: flex;
-    align-items: center;
-}
-
 .center-card .mdl-cell
 {
     margin: 0 auto;
