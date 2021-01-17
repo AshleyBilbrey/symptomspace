@@ -19,7 +19,14 @@ def serve_login():
         if 'session_id' in session:
             return redirect(url_for('serve_dashboard'))
         else:
-            return render_template('login.html')
+            if request.args.get("status") == '1':
+                msg = "Your login session has expired."
+                return render_template('login.html', message = msg)
+            elif request.args.get("status") == '2':
+                msg = "That's not a valid login code!"
+                return render_template('login2.html', phone_number = request.args.get("phone-number"), message = msg)
+            else:
+                return render_template('login.html')
     elif request.method == "POST":
         #Check if valid phone number
         phonenumber = request.form["phone-number"]
@@ -66,14 +73,14 @@ def auth():
         users = db.users
         user = users.find_one({"phone_number": phonenumber})
         if(user == None):
-            return "That's not a valid login code!"
+            return redirect("/login?status=2&phone-number=" + phonenumber)
         else:
             if time.time() > (user["login_time"] + 600):
-                return "Your login session has expired."
+                return redirect("/login?status=1")
             elif verifycode != user["login_code"]:
-                return "That's not a valid login code!"
+                return redirect("/login?status=2&phone-number=" + phonenumber)
             elif user["login_code"] == None:
-                return "That's not a valid login code!"
+                return redirect("/login?status=2&phone-number=" + phonenumber)
             else:
                 new_session_id = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(30))
                 user["session_id"] = new_session_id
@@ -145,9 +152,15 @@ def user_update():
 def temp_base():
     return render_template("base.html")
 
-@app.route("/survey")
+@app.route("/survey", methods = ["GET", "POST"])
 def serve_survey_page():
-    return render_template("survey.html")
+    if request.method == "GET":
+        return render_template("survey.html")
+    elif request.method == "POST":
+        print(request.form)
+        return "Temp"
+    else:
+        return "There was an error processing your request."
 
 @app.errorhandler(404)
 def page_not_found(e):
