@@ -144,6 +144,18 @@ def serve_dashboard():
     else:
         return redirect(url_for("serve_login"))
 
+@app.route("/user/")
+def user_info():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"])
+    else:
+        return redirect(url_for("serve_login"))
+
 @app.route("/user/update", methods = ["POST", "GET"])
 def user_update():
     if "session_id" in session:
@@ -176,7 +188,7 @@ def make_qr(code):
 #Delete this later!
 @app.route("/tempbase")
 def temp_base():
-    return render_template("base.html")
+    return render_template("scan_neutral.html")
 
 @app.route("/survey", methods = ["GET", "POST"])
 def serve_survey_page():
