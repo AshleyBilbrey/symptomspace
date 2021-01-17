@@ -14,7 +14,23 @@ app = Flask(__name__)
 
 @app.route("/")
 def serve_index():
-    return render_template('index.html')
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user != None:
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+        else:
+            user_is_scanner = False
+            user_is_admin = False
+            logged_in = False
+    else:
+        user_is_scanner = False
+        user_is_admin = False
+        logged_in = False
+    return render_template('index.html', active = "home", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
 
 @app.route("/login", methods = ["POST", "GET"])
 def serve_login():
@@ -120,6 +136,7 @@ def serve_dashboard():
         users = db.users
         session_id = session['session_id']
         user = users.find_one({"session_id": session_id})
+
         if user == None:
             return redirect(url_for("logout"))
         elif user["completed_profile"] == False:
@@ -132,11 +149,17 @@ def serve_dashboard():
             most_recent_time = 0
             user_current_survey_id = user["current_survey_id"]
             if user["current_survey_id"] == None:
-                return render_template("dashboard.html", name = user["name"])
+                user_is_scanner = user["scanner_perm"]
+                user_is_admin = user["admin_perm"]
+                logged_in = True
+                return render_template("dashboard.html", name = user["name"], active = "dashboard", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
             else:
                 user_current_survey = surveys.find_one({"_id": user_current_survey_id})
                 if user_current_survey["day"] != cali_date:
-                    return render_template("dashboard.html", name = user["name"])
+                    user_is_scanner = user["scanner_perm"]
+                    user_is_admin = user["admin_perm"]
+                    logged_in = True
+                    return render_template("dashboard.html", name = user["name"], active = "dashboard", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
                 elif user_current_survey["approved"] == True:
                     return render_template("user_approved_survey.html", name = user["name"], survey_id = user_current_survey_id, date = cali_date)
                 elif user_current_survey["approved"] == False:
@@ -154,7 +177,10 @@ def user_info():
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"], scanner = user["scanner_perm"], admin = user["admin_perm"])
+        user_is_scanner = user["scanner_perm"]
+        user_is_admin = user["admin_perm"]
+        logged_in = True
+        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"], scanner = user["scanner_perm"], admin = user["admin_perm"], active = "profile", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -170,7 +196,10 @@ def other_user(phone_number):
             return "Unauthorized"
         else:
             user2 = users.find_one({"phone_number": phone_number})
-            return render_template("user_info.html", phonenumber = user2["phone_number"], name = user2["name"], email = user2["email"], affiliate = user2["affiliate"], status = 1, scanner = user2["scanner_perm"], admin = user2["admin_perm"])
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("user_info.html", phonenumber = user2["phone_number"], name = user2["name"], email = user2["email"], affiliate = user2["affiliate"], status = 1, scanner = user2["scanner_perm"], admin = user2["admin_perm"], active = "users", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -190,7 +219,10 @@ def user_all():
             for u in users.find():
                 names.append(u["name"])
                 numbers.append(u["phone_number"])
-            return render_template("all_users.html", names = names, numbers = numbers, r = users.find().count())
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("all_users.html", names = names, numbers = numbers, r = users.find().count(), active = "users", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -264,11 +296,6 @@ def make_qr(code):
     return send_file(img_IO, mimetype='image/png')
 
 
-#Delete this later!
-@app.route("/tempbase")
-def temp_base():
-    return render_template("scan_neutral.html")
-
 @app.route("/survey", methods = ["GET", "POST"])
 def serve_survey_page():
     if "session_id" in session:
@@ -278,7 +305,10 @@ def serve_survey_page():
         if user == None:
             return redirect(url_for("logout"))
     if request.method == "GET":
-        return render_template("survey.html")
+        user_is_scanner = user["scanner_perm"]
+        user_is_admin = user["admin_perm"]
+        logged_in = True
+        return render_template("survey.html", active = "survey", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     elif request.method == "POST":
         print(request.form)
         approved = True
@@ -331,7 +361,10 @@ def all_locations():
             for loc in locations.find():
                 loc_names.append(loc["name"])
                 loc_ids.append(loc["_id"])
-            return render_template("all_locations.html", loc_names = loc_names, loc_ids = loc_ids, r = locations.find().count())
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("all_locations.html", loc_names = loc_names, loc_ids = loc_ids, r = locations.find().count(), active = "locations", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -374,7 +407,10 @@ def location_info(loc_id):
         else:
             locations = db.locations
             location = locations.find_one({"_id": ObjectId(loc_id)})
-            return render_template("location_info.html", id = loc_id, name = location["name"], address = location["address"])
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("location_info.html", id = loc_id, name = location["name"], address = location["address"], active = "locations", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -420,7 +456,10 @@ def start_scan():
             for loc in locations.find():
                 loc_names.append(loc["name"])
                 loc_ids.append(loc["_id"])
-            return render_template("start_scanning.html", loc_names = loc_names, loc_ids = loc_ids, r = locations.find().count())
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("start_scanning.html", loc_names = loc_names, loc_ids = loc_ids, r = locations.find().count(), active = "scan", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -438,7 +477,10 @@ def scan(loc_id):
             locations = db.locations
             location = locations.find_one({"_id": ObjectId(loc_id)})
             loc_name = location["name"]
-            return render_template("scan_neutral.html", loc_name = loc_name, loc_id = loc_id, time = time.time())
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("scan_neutral.html", loc_name = loc_name, loc_id = loc_id, time = time.time(), active = "scan", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
