@@ -10,14 +10,14 @@ function accept() {
   acceptSound.currentTime = 0;
   acceptSound.play();
   acceptPopup.style.display = "block";
-  setTimeout(function(){ acceptPopup.style.display = "none"; }, 1500);
+  setTimeout(function(){ acceptPopup.style.display = "none"; }, 1250);
 }
 
 function reject() {
   rejectSound.currentTime = 0;
   rejectSound.play();
   rejectPopup.style.display = "block";
-  setTimeout(function(){ rejectPopup.style.display = "none"; }, 1500);
+  setTimeout(function(){ rejectPopup.style.display = "none"; }, 1250);
 }
 
 function decodeContinuously(codeReader, selectedDeviceId) {
