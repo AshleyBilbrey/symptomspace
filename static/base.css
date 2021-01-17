@@ -49,6 +49,8 @@ html, body
     font-style: italic;
     font-family: 'Times New Roman', Times, serif;
     font-size: 1.1em;
+    margin-bottom: 0;
+    line-height: 1.5em;
 }
 
 .mdl-layout__tab-bar-container 
