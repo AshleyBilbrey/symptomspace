@@ -5,7 +5,7 @@
 {% block logout_display %}block{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='scan_neutral.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='scan_neutral.css') }}?t={{ time }}">
 {% endblock %}
 
 
@@ -30,12 +30,19 @@
     Reset
   </button>
 </div>
-  
+
   <br>
 
   <p>Name: <span id="name"></span></p>
   <p>Status: <span id="status"></span></p>
 
+  <form action="/verify" method="GET">
+      <label for="location">Location ID:</label>
+      <input type="text" id="location" name="location" value="{{ loc_id }}"><br>
+      <label for="survey_id">Survey ID:</label>
+      <input type="text" id="survey_id" name="survey_id"><br>
+      <input type="submit" value="Submit">
+  </form>
 <div>
   <label for="sourceSelect">Change video source:</label>
   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="sourceSelectPanel">
@@ -65,4 +72,3 @@
 <audio id="reject" src="{{ url_for('static', filename='audio/reject.mp3') }}" preload="auto" controls="none" style="display: none;"></audio>
 
 {% endblock %}
-
