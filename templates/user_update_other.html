@@ -20,7 +20,7 @@
                         <h2 class="mdl-card__title-text">symptom.space</h2>
                     </div>
                     <div class="mdl-card__supporting-text">
-                        <p>Update your profile</p>
+                        <p>Update {{ phonenumber }}</p>
 
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" type="text" id="full-name" name="full-name" value="{{ name }}">
@@ -43,6 +43,15 @@
                                     <option value="Guest" {% if affiliate == 'Guest' %}selected{% endif %}>Guest</option>
                               </select>
                           </div>
+                          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="is-scanner">
+                              <input type="checkbox" class="mdl-checkbox__input" id="is-scanner" name="is-scanner" value="yes"{% if scanner == True %}checked{% endif %}></input>
+                              <span class="mdl-checkbox__label"> Make Scanner</span>
+                          </label>
+
+                          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="is-admin">
+                              <input type="checkbox" class="mdl-checkbox__input" id="is-admin" name="is-admin" value="yes"{% if admin == True %}checked{% endif %}></input>
+                              <span class="mdl-checkbox__label"> Make Admin</span>
+                          </label>
                     </div>
                     <div class="mdl-card__actions mdl-card--border">
                         <button type="submit" value="Submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
