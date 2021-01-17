@@ -1,2 +1,16 @@
-const possible = ['https://i.imgur.com/Kz0TfnG.jpg','https://i.imgur.com/ut9kWaU.jpg','https://i.imgur.com/weGTTQg.jpg','https://i.imgur.com/hhoMO2O.jpg','https://i.imgur.com/QqeAZLv.jpg','https://i.imgur.com/Kz0TfnG.jpg','https://i.imgur.com/i0MgMEF.jpg','https://i.imgur.com/K41cb1V.jpg','https://i.imgur.com/MonV4f4.jpg','https://i.imgur.com/0U7UK45.jpg','https://i.imgur.com/nmnmjyb.jpg','https://i.imgur.com/YkOuaEB.jpg','https://i.imgur.com/t5ZnvPB.jpg']
+const possible = [
+    'https://i.imgur.com/UEW1hwx.jpg',
+    'https://i.imgur.com/fM3Av8a.jpg',
+    'https://i.imgur.com/hUWO3ZY.jpg',
+    'https://i.imgur.com/K8JyjXW.jpg',
+    'https://i.imgur.com/mVBYiPv.jpg',
+    'https://i.imgur.com/SRyM8UH.jpg',
+    'https://i.imgur.com/iCJt8de.jpg',
+    'https://i.imgur.com/03xDjcY.jpg',
+    'https://i.imgur.com/id2wmS4.jpg',
+    'https://i.imgur.com/ukyPAJC.jpg',
+    'https://i.imgur.com/m0PcIDl.jpg',
+    'https://i.imgur.com/Pbt42Bi.jpg',
+    'https://i.imgur.com/YUpXCQp.jpg'
+]
 document.querySelector('.centered-parent').style.backgroundImage = `url('${possible[Math.floor(Math.random() * possible.length)]}')`
