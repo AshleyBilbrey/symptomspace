@@ -79,8 +79,7 @@ def serve_login():
                     "current_survey_id": None,
                     "session_id": None,
                     "scanner_perm": False,
-                    "admin_perm": False,
-                    "exposures": []
+                    "admin_perm": False
                 }
                 users.insert_one(newuser)
             print("Send text for " + phonenumber + " with code " + new_login_code)
@@ -93,7 +92,7 @@ def serve_login():
                         to='+1' + phonenumber
                     )
                 except:
-                    return "We're sorry, there was an issue sending a code to that phone number. Please try again."
+                    return: "We're sorry, there was an issue sending a code to that phone number. Please try again."
                 print(message.sid)
             return render_template("login2.html", phone_number = phonenumber)
     else:
@@ -196,7 +195,7 @@ def user_info():
         user_is_scanner = user["scanner_perm"]
         user_is_admin = user["admin_perm"]
         logged_in = True
-        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"], exposures = user["exposures"], scanner = user["scanner_perm"], admin = user["admin_perm"], active = "profile", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"], scanner = user["scanner_perm"], admin = user["admin_perm"], active = "profile", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -215,7 +214,7 @@ def other_user(phone_number):
             user_is_scanner = user["scanner_perm"]
             user_is_admin = user["admin_perm"]
             logged_in = True
-            return render_template("user_info.html", phonenumber = user2["phone_number"], name = user2["name"], email = user2["email"], affiliate = user2["affiliate"], exposures = user2["exposures"], status = 1, scanner = user2["scanner_perm"], admin = user2["admin_perm"], active = "users", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+            return render_template("user_info.html", phonenumber = user2["phone_number"], name = user2["name"], email = user2["email"], affiliate = user2["affiliate"], status = 1, scanner = user2["scanner_perm"], admin = user2["admin_perm"], active = "users", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -559,6 +558,7 @@ def positive():
             return render_template("positive.html", name = user["name"])
     else:
         return redirect(url_for("serve_login"))
+
 
 @app.route("/positive/confirm")
 def confirm_positive():
