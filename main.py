@@ -163,11 +163,41 @@ def temp_base():
 
 @app.route("/survey", methods = ["GET", "POST"])
 def serve_survey_page():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
     if request.method == "GET":
         return render_template("survey.html")
     elif request.method == "POST":
         print(request.form)
-        return "Temp"
+        approved = True
+        if request.form["flu"] != "yes":
+            print("No flu test")
+            approved = False
+        if request.form["covid-test"] == "no":
+            print("No covid test")
+            approved = False
+        if request.form["symptoms"] != "NONE":
+            print("Symptoms nono")
+            approved = False
+        if request.form["positive"] != "no":
+            print("Positive test")
+            approved = False
+        if request.form["close-contact"] != "no":
+            print("In close contact")
+            approved = False
+        if request.form["certify"] == None:
+            print("Not true")
+            approved = False
+
+        if approved == True:
+            return render_template("user_approved_survey.html")
+        else:
+            return render_template("user_unapproved_survey.html")
+
     else:
         return "There was an error processing your request."
 
