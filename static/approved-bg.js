@@ -15,10 +15,5 @@
         "/static/images/11.jpg"
     ]
     const bgContainer = document.querySelector('.centered-parent');
-    bgContainer.style.backgroundImage = `url('${possible[Math.floor(Math.random() * possible.length)]}')`
-    bgContainer.style.backgroundSize = 'cover';
-    bgContainer.style.backgroundPosition = 'center';
-    bgContainer.style.width = '100%';
-    bgContainer.style.minHeight = '100%';
-    bgContainer.style.height = 'min-content';
+    bgContainer.style.backgroundImage = `url('${possible[Math.floor(Math.random() * possible.length)]}')`;
 })()
