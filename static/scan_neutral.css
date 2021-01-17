@@ -12,6 +12,12 @@ pre {
 	width: 100%;
 }
 
+#form-submit
+{
+  display: block;
+  margin-top: 8px;
+} 
+
 #welcome-text {
   color: green;
 }

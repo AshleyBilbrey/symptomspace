@@ -1,3 +1,4 @@
+
 {% extends "index.html" %}
 
 {% block title %}Scanner{% endblock %}
@@ -5,8 +6,6 @@
 {% block logout_display %}block{% endblock %}
 
 {% block styles %}
-
-
 <link rel="stylesheet" href="{{ url_for('static', filename='scan_neutral.css') }}?t={{ time }}">
 {% endblock %}
 
@@ -50,6 +49,19 @@
 
 <br>
 
+  <form id="scanner-form" action="/verify" method="GET">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="loc_id" name="loc_id" value="{{ loc_id }}">
+      <label class="mdl-textfield__label" for="sample1">Location ID</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="survey_id" name="survey_id">
+      <label class="mdl-textfield__label" for="sample1">Survey ID</label>
+    </div>
+    <button id="form-submit" type="submit" value="Submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+      Submit
+    </button>
+  </form>
 <div>
   <label for="sourceSelect">Change video source:</label>
   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="sourceSelectPanel">
@@ -61,7 +73,5 @@
 
 <audio id="accept-sound" src="{{ url_for('static', filename='audio/accept.mp3') }}" preload="auto" controls="none" style="display: none;"></audio>
 <audio id="reject-sound" src="{{ url_for('static', filename='audio/reject.mp3') }}" preload="auto" controls="none" style="display: none;"></audio>
-
-<span id="loc_id" style="display: none;">{{ loc_id }}</span>
 
 {% endblock %}

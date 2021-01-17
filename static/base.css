@@ -44,6 +44,13 @@ html, body
     height: 3.5em;
 }
 
+#inspo
+{
+    font-style: italic;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.1em;
+}
+
 .mdl-layout__tab-bar-container 
 {
     height: 64px;

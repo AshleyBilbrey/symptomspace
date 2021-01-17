@@ -1,23 +1,25 @@
-var survey_id = "";
-var location_id = document.getElementById('loc_id').textContent;
+var data = "";
 var acceptSound = document.getElementById('accept-sound');
 var rejectSound = document.getElementById('reject-sound');
 var acceptPopup = document.getElementById('accept-popup');
 var rejectPopup = document.getElementById('reject-popup');
+var nametext = document.getElementById('name');
+var statustext = document.getElementById('status');
 var welcomeText = document.getElementById('welcome-text');
+
 
 function accept() {
   acceptSound.currentTime = 0;
   acceptSound.play();
   acceptPopup.style.display = "block";
-  setTimeout(function(){ acceptPopup.style.display = "none"; }, 1250);
+  setTimeout(function(){ acceptPopup.style.display = "none"; }, 1500);
 }
 
 function reject() {
   rejectSound.currentTime = 0;
   rejectSound.play();
   rejectPopup.style.display = "block";
-  setTimeout(function(){ rejectPopup.style.display = "none"; }, 1250);
+  setTimeout(function(){ rejectPopup.style.display = "none"; }, 1500);
 }
 
 function decodeContinuously(codeReader, selectedDeviceId) {
@@ -26,10 +28,13 @@ function decodeContinuously(codeReader, selectedDeviceId) {
       // properly decoded qr code
       console.log('Found QR code!', result);
 
-      if (survey_id != result.text) {
-        survey_id = result.text;
-        
-        $.get( '/verify', {survey_id: survey_id, loc_id: location_id}).done(response => 
+      if (result.text != data) {
+        data = result.text;
+
+        var surveyText = document.getElementById('survey_id');
+        surveyText.parentElement.classList.add('is-dirty');
+        surveyText.value = result.text;
+        $.get( '/verify', $('#scanner-form').serialize()).done(response => 
         {
           if (response['check'] == true) {
             welcomeText.textContent = "Welcome " + response['name'] + "!";
@@ -38,25 +43,13 @@ function decodeContinuously(codeReader, selectedDeviceId) {
           else {
             reject();
           }
-        })
-        .fail(function() {
-          reject();
-        });
+          })
+          .fail(function() {
+            reject();
+          });
         
       }
     }
-
-    // if (err) {
-    //   if (err instanceof ZXing.NotFoundException) {
-    //     console.log('No QR code found.');
-    //   }
-    //   else if (err instanceof ZXing.ChecksumException) {
-    //     console.log('A code was found, but it\'s read value was not valid.');
-    //   }
-    //   else if (err instanceof ZXing.FormatException) {
-    //     console.log('A code was found, but it was in a invalid format.');
-    //   }
-    // }
   })
 }
 
@@ -94,7 +87,10 @@ window.addEventListener('load', function () {
 
       document.getElementById('resetButton').addEventListener('click', () => {
         codeReader.reset()
-        survey_id = ""
+        var surveyText = document.getElementById('survey_id');
+        surveyText.parentElement.classList.remove('is-dirty');
+        surveyText.value = '';
+        data = ""
         console.log('Reset.')
       })
 
