@@ -1,10 +1,10 @@
-var survey_id = "";
-var location_id = document.getElementById('loc_id').textContent;
+var data = "";
 var acceptSound = document.getElementById('accept-sound');
 var rejectSound = document.getElementById('reject-sound');
 var acceptPopup = document.getElementById('accept-popup');
 var rejectPopup = document.getElementById('reject-popup');
-var welcomeText = document.getElementById('welcome-text');
+var nametext = document.getElementById('name');
+var statustext = document.getElementById('status');
 
 function accept() {
   acceptSound.currentTime = 0;
@@ -26,21 +26,15 @@ function decodeContinuously(codeReader, selectedDeviceId) {
       // properly decoded qr code
       console.log('Found QR code!', result);
 
-      if (survey_id != result.text) {
-        survey_id = result.text;
-        
-        $.get( '/verify', {survey_id: survey_id, loc_id: location_id}).done(response => 
+      if (result.text != data) {
+        accept();
+
+        var surveyText = document.getElementById('survey_id');
+        surveyText.parentElement.classList.add('is-dirty');
+        surveyText.value = result.text;
+        $.get( '/verify', $('#scanner-form').serialize()).done(response => 
         {
-          if (response['check'] == true) {
-            welcomeText.textContent = "Welcome " + response['name'] + "!";
-            accept();
-          }
-          else {
-            reject();
-          }
-        })
-        .fail(function() {
-          reject();
+          console.log(response);
         });
         
       }
