@@ -47,17 +47,16 @@
       </header>
       <main class="mdl-layout__content">
         <div class="mdl-layout__tab-panel is-active" id="overview">
-            <div class="centered-container">
-              {% block content %}
-                <p>Welcome to symptom.space! This is a demo project for HackDavis 2021! Do your symptom survey here.</p>
-                {% if logged_in %}<a href="/dashboard" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go to Dashboard</a>
-                {% else %}<a href="/login" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Login</a>{% endif %}
-                {% if is_scanner %}<a href="/scan" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go to Scanner</a>{% endif %}
-              {% endblock %}
-            </div>
+          <div class="centered-container">
+            {% block content %}
+              <p>Welcome to symptom.space! This is a demo project for HackDavis 2021! Do your symptom survey here.</p>
+              {% if logged_in %}<a href="/dashboard" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go to Dashboard</a>
+              {% else %}<a href="/login" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Login</a>{% endif %}
+              {% if is_scanner %}<a href="/scan" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go to Scanner</a>{% endif %}
+            {% endblock %}
+          </div>
         </div>
-      </main>
-      <footer class="mdl-mega-footer">
+        <footer class="mdl-mega-footer">
           <div class="mdl-mega-footer--middle-section">
             <div class="mdl-mega-footer--drop-down-section">
               <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
@@ -92,7 +91,8 @@
                 HackDavis 2021
             </div>
           </div>
-      </footer>
+        </footer>
+      </main>      
     </div>
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     {% block scripts %}{% endblock %}
