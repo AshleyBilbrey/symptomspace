@@ -10,10 +10,10 @@ Why symptom.space over the existing symptom surveys?
 - (Anyone who reports themselves as positive is kept anonymous!)
 
 Thank you for looking at our project!
-    Ashley Bilbery
-    Karim Abou Najm
-    Ian Chuang
-    Sarah Yunair
+Ashley Bilbery 
+Karim Abou Najm
+Ian Chuang
+Sarah Yunair
 
 Notes if you want to run this yourself, and in production:
 - Replace .txt.sample files with .txt files with you own secrets! This includes api keys and cryptography.
