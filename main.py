@@ -79,7 +79,8 @@ def serve_login():
                     "current_survey_id": None,
                     "session_id": None,
                     "scanner_perm": False,
-                    "admin_perm": False
+                    "admin_perm": False,
+                    "exposures": []
                 }
                 users.insert_one(newuser)
             print("Send text for " + phonenumber + " with code " + new_login_code)
@@ -92,7 +93,7 @@ def serve_login():
                         to='+1' + phonenumber
                     )
                 except:
-                    return: "We're sorry, there was an issue sending a code to that phone number. Please try again."
+                    return "We're sorry, there was an issue sending a code to that phone number. Please try again."
                 print(message.sid)
             return render_template("login2.html", phone_number = phonenumber)
     else:
@@ -195,7 +196,7 @@ def user_info():
         user_is_scanner = user["scanner_perm"]
         user_is_admin = user["admin_perm"]
         logged_in = True
-        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"], scanner = user["scanner_perm"], admin = user["admin_perm"], active = "profile", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+        return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"], exposures = user["exposures"], scanner = user["scanner_perm"], admin = user["admin_perm"], active = "profile", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -214,7 +215,7 @@ def other_user(phone_number):
             user_is_scanner = user["scanner_perm"]
             user_is_admin = user["admin_perm"]
             logged_in = True
-            return render_template("user_info.html", phonenumber = user2["phone_number"], name = user2["name"], email = user2["email"], affiliate = user2["affiliate"], status = 1, scanner = user2["scanner_perm"], admin = user2["admin_perm"], active = "users", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+            return render_template("user_info.html", phonenumber = user2["phone_number"], name = user2["name"], email = user2["email"], affiliate = user2["affiliate"], exposures = user2["exposures"], status = 1, scanner = user2["scanner_perm"], admin = user2["admin_perm"], active = "users", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -553,6 +554,64 @@ def positive():
             return redirect(url_for("logout"))
         else:
             return render_template("positive.html", name = user["name"])
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/positive/confirm")
+def confirm_positive():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        else:
+            cali_time = time.time() - 28800
+            fortnite = cali_time - 1209600
+            exposurelists = db.exposurelists
+            people_exposed = []
+            exposurelist_id = exposurelists.insert_one(new_exposurelist).inserted_id
+            checkins = db.checkins
+            for user_check in checkins.find({"user_id": user["_id"], "time": {"$gt": fortnite}}):
+                user_check["retroactive_check"] = False
+                replace_one({"_id": user_check["_id"]})
+                mt = user_check["time"] - 600
+                pt = user_check["time"] + 600
+                for other_check in checkins.find({"loc_id": user_chec["loc_id"], "time": {"$gt": mt, "$lt": pt} }):
+                    if(other_check["user_id"] != user["_id"]):
+                        update_exposure = users.find_one({"_id", other_check["user_id"]})
+                        update_exposure["exposures"].append(strftime("%Y-%m-%d" , gmtime(other_check["time"])))
+                        users.replace_one({"_id", other_check["user_id"]}, update_exposure)
+                    add_user = True
+                    for u in people_exposed:
+                        if u == other_check["user_id"]:
+                            add_user = False
+                    if (add_user) and (other_check["user_id"] != user["_id"]):
+                        people_exposed.append(other_check["user_id"])
+
+            enable_twilio = False
+            for peeps in people_exposed:
+                belonging_peep = users.find_one({"_id", peep})
+                recent_exposure = belonging_peep["exposures"][-1]
+                print("Send message to " + belonging_peep["phone_number"] + " for exposure on date " + recent_exposure)
+                if(enable_twilio):
+                    try:
+                        message = twilio_client.messages.create(
+                            body='Hello from symptom.space! This is an alert that you may have been in proximity of someone with COVID-19 as early as ' + recent_exposure + '. Please head to our website for a more detailed list of dates.',
+                            from_='+16504494733',
+                            to='+1' + belonging_peep["phone_number"]
+                        )
+                    except:
+                        print("There was a problem sending a text")
+
+            new_exposurelist = {
+                "exposure_host": user["_id"],
+                "reported_time": cali_time,
+                "reported_day": strftime("%Y-%m-%d" , gmtime(cali_time)),
+                "people_exposed": people_exposed
+            }
+            exposurelists.insert_one(new_exposurelist)
+            return render_template("positive_confirm.html")
     else:
         return redirect(url_for("serve_login"))
 
