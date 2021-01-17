@@ -31,12 +31,12 @@ function decodeContinuously(codeReader, selectedDeviceId) {
                 {
                     var response = JSON.parse(req.responseText);
                     var name = response.name;
-                    var status = response.status;
+                    var status = response.check;
 
                     nametext.textContent = name;
                     statustext.textContent = status;
 
-                    if (status == "approved") {
+                    if (status == true) {
                       accept.currentTime = 0;
                       accept.play();
                     }
@@ -47,8 +47,8 @@ function decodeContinuously(codeReader, selectedDeviceId) {
                 }
             }
         }
-    
-        req.open('POST', '/ajax') //route that were gonna send to
+
+        req.open('GET', '/verify') //route that were gonna send to
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
         var postVars = 'data='+data
         req.send(postVars)

@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Login - symptom.space</title>
+    <title>Positive - symptom.space</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -16,26 +16,15 @@
 	<div class="mdl-layout mdl-js-layout mdl-color--grey-100">
 		<main class="mdl-layout__content">
 			<div class="mdl-card mdl-shadow--6dp">
-				<form action="/login" method="POST">
 					<div class="mdl-card__title mdl-color--primary mdl-color-text--white">
 						<h2 class="mdl-card__title-text">symptom.space</h2>
 					</div>
 			  		<div class="mdl-card__supporting-text">
-		  				<p style="color: red; margin: 0;"></p>
-						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						    <input class="mdl-textfield__input" type="tel" id="phone-number" name="phone-number" pattern="[0-9]{10}">
-						    <label class="mdl-textfield__label" for="phone-number">Phone Number (US):</label>
-						</div>
-
-						<p style="color: red; margin: 0">{{ message }}</p>
+						<p>Thank you for deciding to share your positive COVID-19 test result. We use this information to notify others. Your name will not be revealed to others.</p>
+						<p style="color: red; margin: 0;">Are you sure you want to report a positive test result, and do you confirm that it is true?</p><br>
+						<a href="/" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Go back!</a>
+						<a href="/positive/confirm" style="background-color: red;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Confirm</a>
 					</div>
-					<div class="mdl-card__actions mdl-card--border">
-						<button type="submit" value="Login" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-						  Login
-						</button>
-					</div>
-				</form>
-			</div>
 		</main>
 	</div>
 

@@ -38,6 +38,7 @@
 {% endblock %}
 
 {% block scripts %}
+
 <script type="text/javascript">
   function deRequireCb(elClass) {
             el=document.getElementsByClassName(elClass);
@@ -57,9 +58,14 @@
             }
         }
 </script>
+
 {% endblock %}
 
 {% block content %}
+
+{% if status == 1 %}
+<span style="color:#c0392b";><strong>You did not select all required answers.</strong></span><br><br>
+{% endif %}
 
 <form action="/survey" id="vacQ" method="POST">
   <p>Have you received a flu vaccination after August 1, 2020?<br><strong>&nbsp; &nbsp; &nbsp;OR</strong><br>
