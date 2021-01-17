@@ -16,7 +16,18 @@
 
 {% block content %}
 
-<div>
+<div style="width: 100%; position: relative;">
+  <svg style="display:none;" class="popup" id="accept-popup" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+    <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+    <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+  </svg>
+
+
+  <svg style="display:none;" class="popup" id="reject-popup" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+    <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+    <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+    <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+  </svg>
   <video id="video" style="border: 1px solid gray"></video>
 </div>
 
@@ -55,7 +66,7 @@
 </div>
 
 
-<audio id="accept" src="{{ url_for('static', filename='audio/accept.mp3') }}" preload="auto" controls="none" style="display: none;"></audio>
-<audio id="reject" src="{{ url_for('static', filename='audio/reject.mp3') }}" preload="auto" controls="none" style="display: none;"></audio>
+<audio id="accept-sound" src="{{ url_for('static', filename='audio/accept.mp3') }}" preload="auto" controls="none" style="display: none;"></audio>
+<audio id="reject-sound" src="{{ url_for('static', filename='audio/reject.mp3') }}" preload="auto" controls="none" style="display: none;"></audio>
 
 {% endblock %}
