@@ -17,12 +17,6 @@
         margin: 0 auto;
         padding: 0 1rem;
     }
-
-    main.mdl-layout__content {
-    	display: flex !important;
-		  justify-content: center;
-		  align-items: center;
-    }
 </style>
 <body class="mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -56,8 +50,8 @@
               {% endblock %}
             </div>
         </div>
-      </main>
-      <footer class="mdl-mega-footer">
+
+        <footer class="mdl-mega-footer">
           <div class="mdl-mega-footer--middle-section">
             <div class="mdl-mega-footer--drop-down-section">
               <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
@@ -81,6 +75,7 @@
             </div>
           </div>
         </footer>
+      </main>
     </div>
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     {% block scripts %}{% endblock %}

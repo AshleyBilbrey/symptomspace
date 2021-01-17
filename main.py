@@ -425,7 +425,15 @@ def location_info(loc_id):
             user_is_scanner = user["scanner_perm"]
             user_is_admin = user["admin_perm"]
             logged_in = True
-            return render_template("location_info.html", id = loc_id, name = location["name"], address = location["address"], active = "locations", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+            scan_counter = 0
+            problem_counter = 0
+            cali_time = time.time() - 28800
+            fortnite = cali_time - 1209600
+            for scan in db.checkins.find({"loc_id": ObjectId(loc_id), "time": {"$gt": fortnite}}):
+                scan_counter = scan_counter + 1
+                if scan["retroactive_check"] == False:
+                    problem_counter = problem_counter + 1
+            return render_template("location_info.html", id = loc_id, name = location["name"], address = location["address"], scans = scan_counter, problems = problem_counter, active = "locations", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
@@ -618,6 +626,25 @@ def confirm_positive():
             exposurelists.insert_one(new_el)
             print("DONEEEE!")
             return render_template("positive_confirm.html")
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/map")
+def map():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+
+            user_is_scanner = user["scanner_perm"]
+            user_is_admin = user["admin_perm"]
+            logged_in = True
+            return render_template("map.html", active = "map", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
     else:
         return redirect(url_for("serve_login"))
 
