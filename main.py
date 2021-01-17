@@ -2,6 +2,8 @@ from flask import Flask, request, render_template, session, redirect, url_for, s
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from twilio.rest import Client
+from datetime import datetime
+import googlemaps
 import re
 import os
 import time
@@ -10,10 +12,12 @@ import random
 import string
 import qrcode
 import io
+import pprint
 mongoclient = MongoClient()
 db = mongoclient.symptomspace_database
 app = Flask(__name__)
 
+gmaps = googlemaps.Client(key='AIzaSyCBs-ifKG9HEbGN2i3ZbGWV_N4N8waXtec')
 twilio_client = Client(open("./secrets/twilio_sid.txt", "r").read(34), open("./secrets/twilio_secret.txt", "r").read(32))
 
 @app.route("/")
@@ -79,7 +83,8 @@ def serve_login():
                     "current_survey_id": None,
                     "session_id": None,
                     "scanner_perm": False,
-                    "admin_perm": False
+                    "admin_perm": False,
+                    "exposures": []
                 }
                 users.insert_one(newuser)
             print("Send text for " + phonenumber + " with code " + new_login_code)
@@ -640,11 +645,33 @@ def map():
         elif user["admin_perm"] != True:
             return "Unauthorized"
         else:
-
+            lats = []
+            longs = []
+            scans = []
+            problems = []
+            id = []
+            locations = db.locations
+            for loc in locations.find():
+                geocode_result = gmaps.geocode(loc["address"])
+                print(geocode_result[0]["geometry"]["location"])
+                lats.append(geocode_result[0]["geometry"]["location"]["lat"])
+                longs.append(geocode_result[0]["geometry"]["location"]["lng"])
+                problem_counter = 0
+                scan_counter = 0
+                cali_time = time.time() - 28800
+                fortnite = cali_time - 1209600
+                for scan in db.checkins.find({"loc_id": loc["_id"], "time": {"$gt": fortnite}}):
+                    scan_counter = scan_counter + 1
+                    if scan["retroactive_check"] == False:
+                        problem_counter = problem_counter + 1
+                problems.append(problem_counter)
+                scans.append(scan_counter)
+                id.append(str(loc["_id"]))
             user_is_scanner = user["scanner_perm"]
             user_is_admin = user["admin_perm"]
             logged_in = True
-            return render_template("map.html", active = "map", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in)
+            print(id)
+            return render_template("map.html", active = "map", is_scanner = user_is_scanner, is_admin = user_is_admin, logged_in = logged_in, r = len(id), lats = lats, longs = longs, scans = scans, problems = problems, id = id)
     else:
         return redirect(url_for("serve_login"))
 
