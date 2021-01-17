@@ -9,11 +9,11 @@ Why symptom.space over the existing symptom surveys?
 - We keep logs of where people have been and when, so if someone reports themselves as positive, we can imediately psuedo contact trace and notify people via text.
 - (Anyone who reports themselves as positive is kept anonymous!)
 
-Thank you for looking at our project!
-Ashley Bilbery 
-Karim Abou Najm
-Ian Chuang
-Sarah Yunair
+Thank you for looking at our project! From: 
+Ashley Bilbery,
+Karim Abou Najm,
+Ian Chuang,
+and Sarah Yunair.
 
 Notes if you want to run this yourself, and in production:
 - Replace .txt.sample files with .txt files with you own secrets! This includes api keys and cryptography.
