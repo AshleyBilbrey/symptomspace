@@ -655,4 +655,5 @@ def page_not_found(e):
 if __name__ == '__main__':
     f = open("./secrets/secret_key.txt", "r")
     app.secret_key = f.read(25)
+    #app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run()
