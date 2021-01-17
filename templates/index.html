@@ -17,6 +17,16 @@
         margin: 0 auto;
         padding: 0 1rem;
     }
+    .mdl-layout__content
+    {
+      min-height: min-content;
+      display: flex;
+      flex-direction: column;
+    }
+    .mdl-mega-footer
+    {
+      margin-top: auto;
+    }
 </style>
 <body class="mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -58,13 +68,13 @@
               <ul class="mdl-mega-footer--link-list">
                 <li><a href="https://hem.ucdavis.edu/appointments_home.aspx"> Schedule your COVID Test</a></li>
                 <li><a href="https://studentaffairs.ucdavis.edu/news/uc-davis-life-updates-january-2021">Access CalFresh</a></li>
-                <li>UCD Mental Health Services: (530)752-0871</li>
+                <li>UCD Mental Health Services: (530) 752-0871</li>
                 <li>Remember: you are always worth caring for</li>
               </ul>
             </div>
             <div class="mdl-mega-footer--drop-down-section">
               <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-              <h1 class="mdl-mega-footer--heading">Features</h1>
+              <h1 class="mdl-mega-footer--heading">Developers</h1>
               <ul class="mdl-mega-footer--link-list">
                 <li>Ashley Bilbery</li>
                 <li>Karim Abou Najm</li>
@@ -74,19 +84,14 @@
             </div>
             <div class="mdl-mega-footer--drop-down-section">
               <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-              <h1 class="mdl-mega-footer--heading">Developers</h1>
+              <h1 class="mdl-mega-footer--heading">Features</h1>
               <ul class="mdl-mega-footer--link-list">
                 <li><a href="https://github.com/AshleyBilbrey/symptomspace">Source Code</a></li>
               </ul>
             </div>            
           </div>
-          <div class="mdl-mega-footer--bottom-section">
-            <div class="mdl-logo">
-                HackDavis 2021
-            </div>
-          </div>
-        </footer>
-      </main>      
+        </footer> 
+        </main>     
     </div>
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     {% block scripts %}{% endblock %}
