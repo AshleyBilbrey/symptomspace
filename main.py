@@ -57,7 +57,9 @@ def serve_login():
                     "login_time": new_login_time,
                     "login_code": new_login_code,
                     "current_survey_id": None,
-                    "session_id": None
+                    "session_id": None,
+                    "scanner_perm": False,
+                    "admin_perm": False
                 }
                 users.insert_one(newuser)
             print("Send text for " + phonenumber + " with code " + new_login_code)
@@ -153,6 +155,26 @@ def user_info():
         if user == None:
             return redirect(url_for("logout"))
         return render_template("user_info.html", phonenumber = user["phone_number"], name = user["name"], email = user["email"], affiliate = user["affiliate"])
+    else:
+        return redirect(url_for("serve_login"))
+
+@app.route("/user/all")
+def user_all():
+    if "session_id" in session:
+        users = db.users
+        session_id = session['session_id']
+        user = users.find_one({"session_id": session_id})
+        if user == None:
+            return redirect(url_for("logout"))
+        elif user["admin_perm"] != True:
+            return "Unauthorized"
+        else:
+            names = []
+            numbers = []
+            for u in users.find():
+                names.append(u["name"])
+                numbers.append(u["phone_number"])
+            return render_template("all_users.html", names = names, numbers = numbers, r = users.find().count())
     else:
         return redirect(url_for("serve_login"))
 
