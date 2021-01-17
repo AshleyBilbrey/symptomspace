@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-orange.min.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
-    {% block styles %}{% endblock %}
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    {% block scripts %}{% endblock %}
+    {% block styles %}{% endblock %}    
 </head>
 <style>
     .centered-container
@@ -56,10 +54,8 @@
               <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
               <h1 class="mdl-mega-footer--heading">Developers</h1>
               <ul class="mdl-mega-footer--link-list">
-                <li>Karim Abou-Najm</li>
-                <li>Ian Chuang</li>
-                <li>Ashley Bilbrey</li>
-                <li>Sarah Yuniar</li>
+                <li>Ashley Bilbery &emsp; Karim Abou Najm</li>
+                <li>Ian Chuang &emsp; &emsp; Sarah Yunair</li>
               </ul>
             </div>
           </div>
@@ -71,5 +67,7 @@
         </footer>
       </main>
     </div>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
