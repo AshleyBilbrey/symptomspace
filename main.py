@@ -136,9 +136,9 @@ def serve_dashboard():
                 if user_current_survey["day"] != cali_date:
                     return render_template("dashboard.html", name = user["name"])
                 elif user_current_survey["approved"] == True:
-                    return render_template("user_approved_survey.html", name = user["name"])
+                    return render_template("user_approved_survey.html", name = user["name"], survey_id = user_current_survey_id, date = cali_date)
                 elif user_current_survey["approved"] == False:
-                    return render_template("user_unapproved_survey.html", name = user["name"])
+                    return render_template("user_unapproved_survey.html", name = user["name"], survey_id = user_current_survey_id, date = cali_date)
                 else:
                     return "There was an error processing your request."
     else:
