@@ -12,13 +12,16 @@ pre {
 	width: 100%;
 }
 
-#form-submit
-{
-	display: block;
-	margin-top: 8px;
+#welcome-text {
+  color: green;
+}
+
+.centered-container {
+  max-width: 50rem !important;
 }
 
 .popup {
+  text-align: center;
   width: 33%;
   display: block;
   margin: 0;
