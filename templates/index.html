@@ -29,7 +29,7 @@
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="/" class="mdl-layout__tab {% if active == 'home' %} is-active{% endif %}">Home</a>
           <a href="/dashboard" class="mdl-layout__tab {% if active == 'dashboard' %} is-active{% endif %}">Dashboard</a>
-          {% if active == 'survey'%}<a href="/dashboard" class="mdl-layout__tab is-active">Dashboard</a>{% endif %}
+          {% if active == 'survey'%}<a href="/dashboard" class="mdl-layout__tab is-active">Survey</a>{% endif %}
           <a href="/user" class="mdl-layout__tab{% if active == 'profile' %} is-active{% endif %}">Profile</a>
           {% if is_scanner %}<a href="/scan" class="mdl-layout__tab{% if active == 'scan' %} is-active{% endif %}">Scan</a>{% endif %}
           {% if is_admin %}<a href="/user/all" class="mdl-layout__tab{% if active == 'users' %} is-active{% endif %}">Users</a>{% endif %}
