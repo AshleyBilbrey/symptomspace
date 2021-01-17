@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import re
 import time
+from time import gmtime, strftime
 import random
 import string
 mongoclient = MongoClient()
@@ -120,10 +121,26 @@ def serve_dashboard():
         elif user["completed_profile"] == False:
             return render_template("incomplete_profile.html")
         else:
-            #If user has a complete profile, then check if they have a current survey
-            return render_template("dashboard.html", name = user["name"])
+            #Check if they have a valid survey, if they do, serve it.
+            cali_time = time.time() - 28800
+            cali_date = strftime("%Y-%m-%d", gmtime(cali_time))
+            surveys = db.surveys
+            most_recent_time = 0
+            user_current_survey_id = user["current_survey_id"]
+            if user["current_survey_id"] == None:
+                return render_template("dashboard.html", name = user["name"])
+            else:
+                user_current_survey = surveys.find_one({"_id": user_current_survey_id})
+                if user_current_survey["day"] != cali_date:
+                    return render_template("dashboard.html", name = user["name"])
+                elif user_current_survey["approved"] == True:
+                    return render_template("user_approved_survey.html", name = user["name"])
+                elif user_current_survey["approved"] == False:
+                    return render_template("user_unapproved_survey.html", name = user["name"])
+                else:
+                    return "There was an error processing your request."
     else:
-        return "You are not logged in!"
+        return redirect(url_for("serve_login"))
 
 @app.route("/user/update", methods = ["POST", "GET"])
 def user_update():
@@ -184,10 +201,18 @@ def serve_survey_page():
             print("Not true")
             approved = False
 
-        if approved == True:
-            return render_template("user_approved_survey.html")
-        else:
-            return render_template("user_unapproved_survey.html")
+        cali_time = time.time() - 28800
+        new_survey = {
+            "user_id": user["_id"],
+            "time": cali_time,
+            "day": strftime("%Y-%m-%d" , gmtime(cali_time)),
+            "approved": approved
+        }
+        survey_id = db.surveys.insert_one(new_survey).inserted_id
+        user["current_survey_id"] = survey_id
+        user_id = user['_id']
+        users.replace_one({'_id': ObjectId(user_id)}, user)
+        return redirect(url_for("serve_dashboard"))
 
     else:
         return "There was an error processing your request."
