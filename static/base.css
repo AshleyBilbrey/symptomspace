@@ -48,9 +48,9 @@ html, body
 {
     font-style: italic;
     font-family: 'Times New Roman', Times, serif;
-    font-size: 1.1em;
+    font-size: 17px;
     margin-bottom: 0;
-    line-height: 1.5em;
+    line-height: 22px;
 }
 
 .mdl-layout__tab-bar-container 
