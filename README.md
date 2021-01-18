@@ -4,13 +4,15 @@ Welcome to symptom.space! This is a demo project for HackDavis 2021! This is a p
 
 Thank you to HackDavis, Doordash, Twilio, and GoogleCloud for helping power this project!
 
+NOTE: Project temporarily is giving everyone scanner permission for the purpose of demo. Ordinarily this will be locked.
+
 Why symptom.space over the existing symptom surveys?
 - Validated surveys confirm when they were filled and their authenticity, while the current system is prone to error.
 - Streamlined process. This means less waiting time indoors, which due to the close proximity of students despite regulations will help curb transmissions.
 - Logged visiting locations allows people to be notified if they were indoors with someone who has been tested positive for COVID. Through psuedo contact trace, we can notify people of their danger.
 - Provided option to report self as having COVID.
 
-Thank you for looking at our project! From: 
+Thank you for looking at our project! From:
 Ashley Bilbery,
 Karim Abou Najm,
 Ian Chuang,

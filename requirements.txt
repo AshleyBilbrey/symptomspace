@@ -3,3 +3,4 @@ pymongo==3.11.2
 qrcode==6.1
 requests==2.25.1
 twilio==6.51.0
+googlemaps==4.4.2
