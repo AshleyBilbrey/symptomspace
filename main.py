@@ -82,7 +82,7 @@ def serve_login():
                     "login_code": new_login_code,
                     "current_survey_id": None,
                     "session_id": None,
-                    "scanner_perm": False,
+                    "scanner_perm": True, #Temporarily making everyone a scanner!
                     "admin_perm": False,
                     "exposures": []
                 }
@@ -372,7 +372,7 @@ def all_locations():
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-        elif user["admin_perm"] != True:
+        elif user["scanner_perm"] != True:
             return "Unauthorized"
         else:
             locations = db.locations
@@ -396,7 +396,7 @@ def add_location():
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-        elif user["admin_perm"] != True:
+        elif user["scanner_perm"] != True:
             return "Unauthorized"
         else:
             if request.method == "GET":
@@ -422,7 +422,7 @@ def location_info(loc_id):
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-        elif user["admin_perm"] != True:
+        elif user["scanner_perm"] != True:
             return "Unauthorized"
         else:
             locations = db.locations
@@ -450,7 +450,7 @@ def update_location(loc_id):
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-        elif user["admin_perm"] != True:
+        elif user["scanner_perm"] != True:
             return "Unauthorized"
         else:
             locations = db.locations
@@ -644,7 +644,7 @@ def map():
         user = users.find_one({"session_id": session_id})
         if user == None:
             return redirect(url_for("logout"))
-        elif user["admin_perm"] != True:
+        elif user["scanner_perm"] != True:
             return "Unauthorized"
         else:
             lats = []
