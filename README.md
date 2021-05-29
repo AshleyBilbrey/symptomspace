@@ -1,5 +1,6 @@
 # symptomspace
-http://symptom.space
+[View the demo video here](https://devpost.com/software/symptom-space)
+
 Welcome to symptom.space! This is a demo project for HackDavis 2021! This is a project intended to streamline the existing COVID-19 survey procedures, and provide a more safe environment for all. To be clear, the presented code is only a demo and not the official symptom survey. Therefore, feel free to mess around and answer some questions wrong while exploring what we have created.
 
 Thank you to HackDavis, Doordash, Twilio, and GoogleCloud for helping power this project!
